@@ -42,59 +42,40 @@ class Ui_MainWindow(object):
         self.widget.setObjectName(u"widget")
         sizePolicy.setHeightForWidth(self.widget.sizePolicy().hasHeightForWidth())
         self.widget.setSizePolicy(sizePolicy)
-        self.gridLayout_3 = QGridLayout(self.widget)
+        self.gridLayout_5 = QGridLayout(self.widget)
+        self.gridLayout_5.setObjectName(u"gridLayout_5")
+        self.widget_2 = QWidget(self.widget)
+        self.widget_2.setObjectName(u"widget_2")
+        self.gridLayout_3 = QGridLayout(self.widget_2)
         self.gridLayout_3.setObjectName(u"gridLayout_3")
-        self.widgetVisualize = QWidget(self.widget)
-        self.widgetVisualize.setObjectName(u"widgetVisualize")
-        sizePolicy.setHeightForWidth(self.widgetVisualize.sizePolicy().hasHeightForWidth())
-        self.widgetVisualize.setSizePolicy(sizePolicy)
-        self.gridLayout_4 = QGridLayout(self.widgetVisualize)
-        self.gridLayout_4.setObjectName(u"gridLayout_4")
-        self.lineEditCurrentImg = QLineEdit(self.widgetVisualize)
-        self.lineEditCurrentImg.setObjectName(u"lineEditCurrentImg")
+        self.pushButtonSelectModel = QPushButton(self.widget_2)
+        self.pushButtonSelectModel.setObjectName(u"pushButtonSelectModel")
 
-        self.gridLayout_4.addWidget(self.lineEditCurrentImg, 2, 1, 1, 1)
+        self.gridLayout_3.addWidget(self.pushButtonSelectModel, 0, 0, 1, 1)
 
-        self.labelCurrentImg = QLabel(self.widgetVisualize)
-        self.labelCurrentImg.setObjectName(u"labelCurrentImg")
+        self.lineEditSelectModel = QLineEdit(self.widget_2)
+        self.lineEditSelectModel.setObjectName(u"lineEditSelectModel")
+        self.lineEditSelectModel.setClearButtonEnabled(True)
 
-        self.gridLayout_4.addWidget(self.labelCurrentImg, 2, 0, 1, 1)
+        self.gridLayout_3.addWidget(self.lineEditSelectModel, 0, 1, 1, 1)
 
-        self.pushButtonLoadResults = QPushButton(self.widgetVisualize)
-        self.pushButtonLoadResults.setObjectName(u"pushButtonLoadResults")
+        self.pushButtonSelectDataset = QPushButton(self.widget_2)
+        self.pushButtonSelectDataset.setObjectName(u"pushButtonSelectDataset")
 
-        self.gridLayout_4.addWidget(self.pushButtonLoadResults, 2, 3, 1, 1)
+        self.gridLayout_3.addWidget(self.pushButtonSelectDataset, 1, 0, 1, 1)
 
-        self.toolButtonPrev = QToolButton(self.widgetVisualize)
-        self.toolButtonPrev.setObjectName(u"toolButtonPrev")
-        self.toolButtonPrev.setArrowType(Qt.LeftArrow)
+        self.lineEditSelectDataset = QLineEdit(self.widget_2)
+        self.lineEditSelectDataset.setObjectName(u"lineEditSelectDataset")
+        self.lineEditSelectDataset.setClearButtonEnabled(True)
 
-        self.gridLayout_4.addWidget(self.toolButtonPrev, 1, 0, 1, 1)
+        self.gridLayout_3.addWidget(self.lineEditSelectDataset, 1, 1, 1, 1)
 
-        self.graphicsView = QGraphicsView(self.widgetVisualize)
-        self.graphicsView.setObjectName(u"graphicsView")
-
-        self.gridLayout_4.addWidget(self.graphicsView, 1, 1, 1, 3)
-
-
-        self.gridLayout_3.addWidget(self.widgetVisualize, 0, 1, 1, 1)
-
-        self.tabWidget = QTabWidget(self.widget)
+        self.tabWidget = QTabWidget(self.widget_2)
         self.tabWidget.setObjectName(u"tabWidget")
         self.trainTab = QWidget()
         self.trainTab.setObjectName(u"trainTab")
         self.gridLayout = QGridLayout(self.trainTab)
         self.gridLayout.setObjectName(u"gridLayout")
-        self.pushButtonSelectModel = QPushButton(self.trainTab)
-        self.pushButtonSelectModel.setObjectName(u"pushButtonSelectModel")
-
-        self.gridLayout.addWidget(self.pushButtonSelectModel, 0, 0, 1, 1)
-
-        self.pushButtonSelectDataset = QPushButton(self.trainTab)
-        self.pushButtonSelectDataset.setObjectName(u"pushButtonSelectDataset")
-
-        self.gridLayout.addWidget(self.pushButtonSelectDataset, 1, 0, 1, 1)
-
         self.pushButtonTrain = QPushButton(self.trainTab)
         self.pushButtonTrain.setObjectName(u"pushButtonTrain")
 
@@ -110,7 +91,6 @@ class Ui_MainWindow(object):
         self.gridLayout_2.addWidget(self.labelBatch, 2, 0, 1, 1)
 
         self.comboBoxSizeImage = QComboBox(self.groupBoxArguments)
-        self.comboBoxSizeImage.addItem("")
         self.comboBoxSizeImage.addItem("")
         self.comboBoxSizeImage.addItem("")
         self.comboBoxSizeImage.setObjectName(u"comboBoxSizeImage")
@@ -214,30 +194,56 @@ class Ui_MainWindow(object):
 
         self.gridLayout.addWidget(self.groupBoxArguments, 2, 0, 1, 3)
 
-        self.lineEditSelectModel = QLineEdit(self.trainTab)
-        self.lineEditSelectModel.setObjectName(u"lineEditSelectModel")
-        self.lineEditSelectModel.setClearButtonEnabled(True)
-
-        self.gridLayout.addWidget(self.lineEditSelectModel, 0, 1, 1, 2)
-
-        self.lineEditSelectDataset = QLineEdit(self.trainTab)
-        self.lineEditSelectDataset.setObjectName(u"lineEditSelectDataset")
-        self.lineEditSelectDataset.setClearButtonEnabled(True)
-
-        self.gridLayout.addWidget(self.lineEditSelectDataset, 1, 1, 1, 2)
-
         self.tabWidget.addTab(self.trainTab, "")
         self.inferenceTab = QWidget()
         self.inferenceTab.setObjectName(u"inferenceTab")
         self.tabWidget.addTab(self.inferenceTab, "")
 
-        self.gridLayout_3.addWidget(self.tabWidget, 0, 0, 1, 1)
+        self.gridLayout_3.addWidget(self.tabWidget, 2, 0, 1, 2)
 
-        self.toolButtonNext = QToolButton(self.widget)
+
+        self.gridLayout_5.addWidget(self.widget_2, 0, 0, 1, 1)
+
+        self.widgetVisualize = QWidget(self.widget)
+        self.widgetVisualize.setObjectName(u"widgetVisualize")
+        sizePolicy.setHeightForWidth(self.widgetVisualize.sizePolicy().hasHeightForWidth())
+        self.widgetVisualize.setSizePolicy(sizePolicy)
+        self.gridLayout_4 = QGridLayout(self.widgetVisualize)
+        self.gridLayout_4.setObjectName(u"gridLayout_4")
+        self.graphicsView = QGraphicsView(self.widgetVisualize)
+        self.graphicsView.setObjectName(u"graphicsView")
+
+        self.gridLayout_4.addWidget(self.graphicsView, 1, 1, 1, 3)
+
+        self.lineEditCurrentImg = QLineEdit(self.widgetVisualize)
+        self.lineEditCurrentImg.setObjectName(u"lineEditCurrentImg")
+
+        self.gridLayout_4.addWidget(self.lineEditCurrentImg, 2, 1, 1, 1)
+
+        self.toolButtonPrev = QToolButton(self.widgetVisualize)
+        self.toolButtonPrev.setObjectName(u"toolButtonPrev")
+        self.toolButtonPrev.setArrowType(Qt.LeftArrow)
+
+        self.gridLayout_4.addWidget(self.toolButtonPrev, 1, 0, 1, 1)
+
+        self.pushButtonLoadResults = QPushButton(self.widgetVisualize)
+        self.pushButtonLoadResults.setObjectName(u"pushButtonLoadResults")
+
+        self.gridLayout_4.addWidget(self.pushButtonLoadResults, 2, 3, 1, 1)
+
+        self.labelCurrentImg = QLabel(self.widgetVisualize)
+        self.labelCurrentImg.setObjectName(u"labelCurrentImg")
+
+        self.gridLayout_4.addWidget(self.labelCurrentImg, 2, 0, 1, 1)
+
+        self.toolButtonNext = QToolButton(self.widgetVisualize)
         self.toolButtonNext.setObjectName(u"toolButtonNext")
         self.toolButtonNext.setArrowType(Qt.RightArrow)
 
-        self.gridLayout_3.addWidget(self.toolButtonNext, 0, 2, 1, 1)
+        self.gridLayout_4.addWidget(self.toolButtonNext, 1, 4, 1, 1)
+
+
+        self.gridLayout_5.addWidget(self.widgetVisualize, 0, 1, 1, 1)
 
         self.splitter.addWidget(self.widget)
         self.plainTextEditLog = QPlainTextEdit(self.splitter)
@@ -245,7 +251,7 @@ class Ui_MainWindow(object):
         sizePolicy.setHeightForWidth(self.plainTextEditLog.sizePolicy().hasHeightForWidth())
         self.plainTextEditLog.setSizePolicy(sizePolicy)
         font = QFont()
-        font.setPointSize(14)
+        font.setPointSize(12)
         self.plainTextEditLog.setFont(font)
         self.splitter.addWidget(self.plainTextEditLog)
 
@@ -270,21 +276,18 @@ class Ui_MainWindow(object):
 
     def retranslateUi(self, MainWindow):
         MainWindow.setWindowTitle(QCoreApplication.translate("MainWindow", u"YoloQT", None))
-        self.lineEditCurrentImg.setPlaceholderText(QCoreApplication.translate("MainWindow", u"Results not loaded ->", None))
-        self.labelCurrentImg.setText(QCoreApplication.translate("MainWindow", u"Current:", None))
-        self.pushButtonLoadResults.setText(QCoreApplication.translate("MainWindow", u"Load results", None))
-        self.toolButtonPrev.setText(QCoreApplication.translate("MainWindow", u"...", None))
 #if QT_CONFIG(tooltip)
         self.pushButtonSelectModel.setToolTip(QCoreApplication.translate("MainWindow", u"Opens dialog and lets you select model for training", None))
 #endif // QT_CONFIG(tooltip)
         self.pushButtonSelectModel.setText(QCoreApplication.translate("MainWindow", u"Select model", None))
+        self.lineEditSelectModel.setPlaceholderText(QCoreApplication.translate("MainWindow", u"Selected model path", None))
         self.pushButtonSelectDataset.setText(QCoreApplication.translate("MainWindow", u"Select dataset", None))
+        self.lineEditSelectDataset.setPlaceholderText(QCoreApplication.translate("MainWindow", u"Selected dataset path", None))
         self.pushButtonTrain.setText(QCoreApplication.translate("MainWindow", u"Train", None))
         self.groupBoxArguments.setTitle(QCoreApplication.translate("MainWindow", u"Arguments", None))
         self.labelBatch.setText(QCoreApplication.translate("MainWindow", u"Batch", None))
-        self.comboBoxSizeImage.setItemText(0, QCoreApplication.translate("MainWindow", u"auto", None))
-        self.comboBoxSizeImage.setItemText(1, QCoreApplication.translate("MainWindow", u"416", None))
-        self.comboBoxSizeImage.setItemText(2, QCoreApplication.translate("MainWindow", u"640", None))
+        self.comboBoxSizeImage.setItemText(0, QCoreApplication.translate("MainWindow", u"416", None))
+        self.comboBoxSizeImage.setItemText(1, QCoreApplication.translate("MainWindow", u"640", None))
 
 #if QT_CONFIG(tooltip)
         self.comboBoxSizeImage.setToolTip(QCoreApplication.translate("MainWindow", u"imgsz", None))
@@ -312,7 +315,7 @@ class Ui_MainWindow(object):
         self.comboBoxDevice.setItemText(1, QCoreApplication.translate("MainWindow", u"cpu", None))
 
 #if QT_CONFIG(tooltip)
-        self.comboBoxDevice.setToolTip(QCoreApplication.translate("MainWindow", u"device", None))
+        self.comboBoxDevice.setToolTip(QCoreApplication.translate("MainWindow", u"0 = GPU", None))
 #endif // QT_CONFIG(tooltip)
 #if QT_CONFIG(tooltip)
         self.spinBoxWorkers.setToolTip(QCoreApplication.translate("MainWindow", u"workers", None))
@@ -328,10 +331,12 @@ class Ui_MainWindow(object):
 #if QT_CONFIG(tooltip)
         self.comboBoxOptimizer.setToolTip(QCoreApplication.translate("MainWindow", u"optimizer", None))
 #endif // QT_CONFIG(tooltip)
-        self.lineEditSelectModel.setPlaceholderText(QCoreApplication.translate("MainWindow", u"Selected model path", None))
-        self.lineEditSelectDataset.setPlaceholderText(QCoreApplication.translate("MainWindow", u"Selected dataset path", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.trainTab), QCoreApplication.translate("MainWindow", u"Train", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.inferenceTab), QCoreApplication.translate("MainWindow", u"Inference", None))
+        self.lineEditCurrentImg.setPlaceholderText(QCoreApplication.translate("MainWindow", u"Results not loaded ->", None))
+        self.toolButtonPrev.setText(QCoreApplication.translate("MainWindow", u"...", None))
+        self.pushButtonLoadResults.setText(QCoreApplication.translate("MainWindow", u"Load results", None))
+        self.labelCurrentImg.setText(QCoreApplication.translate("MainWindow", u"Current:", None))
         self.toolButtonNext.setText(QCoreApplication.translate("MainWindow", u"...", None))
     # retranslateUi
 

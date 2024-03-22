@@ -1,72 +1,21 @@
 import logging
-import re
 from enum import IntEnum
 from pathlib import Path
 
 from PySide6.QtCore import Qt
 from PySide6.QtGui import QPixmap
-from PySide6.QtWidgets import (QMainWindow, QSpinBox, QComboBox, QFileDialog, QPlainTextEdit, QApplication,
-                               QGraphicsScene, QGraphicsPixmapItem)
+from PySide6.QtWidgets import (QMainWindow, QSpinBox, QComboBox, QFileDialog, QGraphicsScene, QGraphicsPixmapItem)
 from ultralytics.utils import LOGGER as YOLO_LOGGER
 
 from src.gui.generated.ui_mainwindow import Ui_MainWindow
 from src.utils import yoloiface
+from src.utils.loghandlers import YoloLogHandler, MyLogHandler
+from src.utils.syntaxhighlighter import SyntaxHighlighter
 
 
 class Direction(IntEnum):
     PREV = 0
     NEXT = 1
-
-
-def remove_ansi_codes(s: str) -> str:
-    ansi_escape = re.compile(r'\x1B(?:[@-Z\\-_]|\[[0-?]*[ -/]*[@-~])')
-    return ansi_escape.sub('', s)
-
-
-class MyLogHandler(logging.Handler):
-
-    def __init__(self, plain_text_edit: QPlainTextEdit):
-        super().__init__()
-        self.widget = plain_text_edit
-
-    def emit(self, record):
-        msg = self.format(record)
-        self.widget.appendPlainText(msg)
-
-
-class YoloLogHandler(logging.Handler):
-
-    def __init__(self, plain_text_edit: QPlainTextEdit):
-        super().__init__()
-        self.widget = plain_text_edit
-        self.total_epoch = 0
-        self.current_epoch = 1
-
-    def emit(self, record):
-        msg = re.sub(r'\s+', ' ', self.format(record).strip())
-        if 'Epoch' in msg:
-            msg = f"Epoch {self.current_epoch}/{self.total_epoch}"
-            self.current_epoch += 1
-            self.widget.appendPlainText(msg)
-        elif 'Model summary' in msg:
-            self.widget.appendPlainText(f"\n{msg}")
-        elif 'Results saved to' in msg:
-            msg = remove_ansi_codes(msg)
-            _, part2 = msg.split("Results saved to ")
-            self.widget.appendPlainText(f"\nYou can find results here: {Path(part2).absolute()}")
-        elif 'Speed:' in msg:
-            self.widget.appendPlainText(msg)
-        else:
-            try:
-                pattern = r'^(\w+)\s(-?\d+(\.\d+)?)\s(-?\d+(\.\d+)?)\s(-?\d+(\.\d+)?)\s(-?\d+(\.\d+)?)\s(-?\d+(\.\d+)?)\s(-?\d+(\.\d+)?)$'  # noqa
-                if re.match(pattern, msg):
-                    attribs = ['class', 'images', 'instances', 'precision', 'recall', 'map50', 'map50-95']
-                    data = {name: value for name, value in zip(attribs, msg.split(' '))}
-                    msg = str(data)
-                    self.widget.appendPlainText(msg)
-            except:
-                pass
-        QApplication.processEvents()
 
 
 class ModelSelectDialog(QFileDialog):
@@ -120,6 +69,10 @@ class AppMainWindow(QMainWindow):
         formatter = logging.Formatter('%(asctime)s [%(levelname)s] %(message)s', datefmt="%H:%M:%S")
         my_log_handler.setFormatter(formatter)
         logging.getLogger().addHandler(my_log_handler)
+
+        self.ui.splitter.splitterMoved.connect(self.splitter_moved)
+
+        syntax_highlighter = SyntaxHighlighter(self.ui.plainTextEditLog.document())
 
         # FOR TESTING
         self.ui.lineEditSelectModel.setText(r"F:/School/Ing/DIPLOMA/YoloQT/src/models/yolov8n.pt")
@@ -209,3 +162,9 @@ class AppMainWindow(QMainWindow):
         if new_idx >= len(self.results) or new_idx < 0:
             return
         self.load_image(self.results[new_idx])
+
+    def resizeEvent(self, event):
+        self.ui.graphicsView.fitInView(self.ui.graphicsView.sceneRect())
+
+    def splitter_moved(self, pos: int, index: int):
+        self.ui.graphicsView.fitInView(self.ui.graphicsView.sceneRect())
