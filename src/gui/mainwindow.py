@@ -119,7 +119,7 @@ class AppMainWindow(QMainWindow):
             return
 
         params = {'model': Path(model_pth), 'data': Path(dataset_pth)}
-        child_objects = [obj for obj in self.ui.groupBoxArguments.children() if isinstance(obj, (QSpinBox, QComboBox))]
+        child_objects = [obj for obj in self.ui.groupBoxTrainArgs.children() if isinstance(obj, (QSpinBox, QComboBox))]
         for child_obj in child_objects:
             val = child_obj.value() if isinstance(child_obj, QSpinBox) else child_obj.currentText()
             if isinstance(val, str) and val.isdigit():
