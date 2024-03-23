@@ -204,16 +204,16 @@ class Ui_MainWindow(object):
 
         self.gridLayout_7.addWidget(self.pushButtonVal, 1, 2, 1, 1)
 
-        self.groupBoxTestArgs = QGroupBox(self.inferenceTab)
-        self.groupBoxTestArgs.setObjectName(u"groupBoxTestArgs")
-        self.gridLayout_6 = QGridLayout(self.groupBoxTestArgs)
+        self.groupBoxValArgs = QGroupBox(self.inferenceTab)
+        self.groupBoxValArgs.setObjectName(u"groupBoxValArgs")
+        self.gridLayout_6 = QGridLayout(self.groupBoxValArgs)
         self.gridLayout_6.setObjectName(u"gridLayout_6")
-        self.labelBatch_2 = QLabel(self.groupBoxTestArgs)
+        self.labelBatch_2 = QLabel(self.groupBoxValArgs)
         self.labelBatch_2.setObjectName(u"labelBatch_2")
 
         self.gridLayout_6.addWidget(self.labelBatch_2, 1, 0, 1, 1)
 
-        self.doubleSpinBoxConf = QDoubleSpinBox(self.groupBoxTestArgs)
+        self.doubleSpinBoxConf = QDoubleSpinBox(self.groupBoxValArgs)
         self.doubleSpinBoxConf.setObjectName(u"doubleSpinBoxConf")
         self.doubleSpinBoxConf.setDecimals(3)
         self.doubleSpinBoxConf.setSingleStep(0.001000000000000)
@@ -221,46 +221,46 @@ class Ui_MainWindow(object):
 
         self.gridLayout_6.addWidget(self.doubleSpinBoxConf, 2, 1, 1, 1)
 
-        self.labelDevice_2 = QLabel(self.groupBoxTestArgs)
+        self.labelDevice_2 = QLabel(self.groupBoxValArgs)
         self.labelDevice_2.setObjectName(u"labelDevice_2")
 
         self.gridLayout_6.addWidget(self.labelDevice_2, 5, 0, 1, 1)
 
-        self.comboBoxDevice_2 = QComboBox(self.groupBoxTestArgs)
+        self.comboBoxDevice_2 = QComboBox(self.groupBoxValArgs)
         self.comboBoxDevice_2.addItem("")
         self.comboBoxDevice_2.addItem("")
         self.comboBoxDevice_2.setObjectName(u"comboBoxDevice_2")
 
         self.gridLayout_6.addWidget(self.comboBoxDevice_2, 5, 1, 1, 1)
 
-        self.labelConf = QLabel(self.groupBoxTestArgs)
+        self.labelConf = QLabel(self.groupBoxValArgs)
         self.labelConf.setObjectName(u"labelConf")
 
         self.gridLayout_6.addWidget(self.labelConf, 2, 0, 1, 1)
 
-        self.labelIoU = QLabel(self.groupBoxTestArgs)
+        self.labelIoU = QLabel(self.groupBoxValArgs)
         self.labelIoU.setObjectName(u"labelIoU")
 
         self.gridLayout_6.addWidget(self.labelIoU, 3, 0, 1, 1)
 
-        self.doubleSpinBoxIoU = QDoubleSpinBox(self.groupBoxTestArgs)
+        self.doubleSpinBoxIoU = QDoubleSpinBox(self.groupBoxValArgs)
         self.doubleSpinBoxIoU.setObjectName(u"doubleSpinBoxIoU")
         self.doubleSpinBoxIoU.setSingleStep(0.010000000000000)
         self.doubleSpinBoxIoU.setValue(0.600000000000000)
 
         self.gridLayout_6.addWidget(self.doubleSpinBoxIoU, 3, 1, 1, 1)
 
-        self.labelMaxDet = QLabel(self.groupBoxTestArgs)
+        self.labelMaxDet = QLabel(self.groupBoxValArgs)
         self.labelMaxDet.setObjectName(u"labelMaxDet")
 
         self.gridLayout_6.addWidget(self.labelMaxDet, 4, 0, 1, 1)
 
-        self.labelImageSize = QLabel(self.groupBoxTestArgs)
+        self.labelImageSize = QLabel(self.groupBoxValArgs)
         self.labelImageSize.setObjectName(u"labelImageSize")
 
         self.gridLayout_6.addWidget(self.labelImageSize, 0, 0, 1, 1)
 
-        self.spinBoxMaxDet = QSpinBox(self.groupBoxTestArgs)
+        self.spinBoxMaxDet = QSpinBox(self.groupBoxValArgs)
         self.spinBoxMaxDet.setObjectName(u"spinBoxMaxDet")
         self.spinBoxMaxDet.setMinimum(1)
         self.spinBoxMaxDet.setMaximum(1000)
@@ -269,7 +269,7 @@ class Ui_MainWindow(object):
 
         self.gridLayout_6.addWidget(self.spinBoxMaxDet, 4, 1, 1, 1)
 
-        self.spinBoxBatch_2 = QSpinBox(self.groupBoxTestArgs)
+        self.spinBoxBatch_2 = QSpinBox(self.groupBoxValArgs)
         self.spinBoxBatch_2.setObjectName(u"spinBoxBatch_2")
         self.spinBoxBatch_2.setMinimum(8)
         self.spinBoxBatch_2.setMaximum(128)
@@ -278,7 +278,7 @@ class Ui_MainWindow(object):
 
         self.gridLayout_6.addWidget(self.spinBoxBatch_2, 1, 1, 1, 1)
 
-        self.comboBoxImageSize = QComboBox(self.groupBoxTestArgs)
+        self.comboBoxImageSize = QComboBox(self.groupBoxValArgs)
         self.comboBoxImageSize.addItem("")
         self.comboBoxImageSize.addItem("")
         self.comboBoxImageSize.setObjectName(u"comboBoxImageSize")
@@ -286,7 +286,7 @@ class Ui_MainWindow(object):
         self.gridLayout_6.addWidget(self.comboBoxImageSize, 0, 1, 1, 1)
 
 
-        self.gridLayout_7.addWidget(self.groupBoxTestArgs, 0, 0, 1, 3)
+        self.gridLayout_7.addWidget(self.groupBoxValArgs, 0, 0, 1, 3)
 
         self.tabWidget.addTab(self.inferenceTab, "")
 
@@ -359,7 +359,7 @@ class Ui_MainWindow(object):
 
         self.retranslateUi(MainWindow)
 
-        self.tabWidget.setCurrentIndex(1)
+        self.tabWidget.setCurrentIndex(0)
 
 
         QMetaObject.connectSlotsByName(MainWindow)
@@ -407,7 +407,7 @@ class Ui_MainWindow(object):
         self.comboBoxDevice.setItemText(1, QCoreApplication.translate("MainWindow", u"cpu", None))
 
 #if QT_CONFIG(tooltip)
-        self.comboBoxDevice.setToolTip(QCoreApplication.translate("MainWindow", u"0 = GPU", None))
+        self.comboBoxDevice.setToolTip(QCoreApplication.translate("MainWindow", u"device", None))
 #endif // QT_CONFIG(tooltip)
         self.labelDevice.setText(QCoreApplication.translate("MainWindow", u"Device", None))
         self.labelSavePeriod.setText(QCoreApplication.translate("MainWindow", u"Save period", None))
@@ -424,19 +424,37 @@ class Ui_MainWindow(object):
         self.pushButtonTrain.setText(QCoreApplication.translate("MainWindow", u"Train", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.trainTab), QCoreApplication.translate("MainWindow", u"Train", None))
         self.pushButtonVal.setText(QCoreApplication.translate("MainWindow", u"Val", None))
-        self.groupBoxTestArgs.setTitle(QCoreApplication.translate("MainWindow", u"Arguments", None))
+        self.groupBoxValArgs.setTitle(QCoreApplication.translate("MainWindow", u"Arguments", None))
         self.labelBatch_2.setText(QCoreApplication.translate("MainWindow", u"Batch", None))
+#if QT_CONFIG(tooltip)
+        self.doubleSpinBoxConf.setToolTip(QCoreApplication.translate("MainWindow", u"conf", None))
+#endif // QT_CONFIG(tooltip)
         self.labelDevice_2.setText(QCoreApplication.translate("MainWindow", u"Device", None))
         self.comboBoxDevice_2.setItemText(0, QCoreApplication.translate("MainWindow", u"CPU", None))
         self.comboBoxDevice_2.setItemText(1, QCoreApplication.translate("MainWindow", u"0", None))
 
+#if QT_CONFIG(tooltip)
+        self.comboBoxDevice_2.setToolTip(QCoreApplication.translate("MainWindow", u"device", None))
+#endif // QT_CONFIG(tooltip)
         self.labelConf.setText(QCoreApplication.translate("MainWindow", u"Confidence", None))
         self.labelIoU.setText(QCoreApplication.translate("MainWindow", u"Intersection over union", None))
+#if QT_CONFIG(tooltip)
+        self.doubleSpinBoxIoU.setToolTip(QCoreApplication.translate("MainWindow", u"iou", None))
+#endif // QT_CONFIG(tooltip)
         self.labelMaxDet.setText(QCoreApplication.translate("MainWindow", u"Maximum number of detections", None))
         self.labelImageSize.setText(QCoreApplication.translate("MainWindow", u"Image size", None))
+#if QT_CONFIG(tooltip)
+        self.spinBoxMaxDet.setToolTip(QCoreApplication.translate("MainWindow", u"max_det", None))
+#endif // QT_CONFIG(tooltip)
+#if QT_CONFIG(tooltip)
+        self.spinBoxBatch_2.setToolTip(QCoreApplication.translate("MainWindow", u"batch", None))
+#endif // QT_CONFIG(tooltip)
         self.comboBoxImageSize.setItemText(0, QCoreApplication.translate("MainWindow", u"416", None))
         self.comboBoxImageSize.setItemText(1, QCoreApplication.translate("MainWindow", u"640", None))
 
+#if QT_CONFIG(tooltip)
+        self.comboBoxImageSize.setToolTip(QCoreApplication.translate("MainWindow", u"imgsz", None))
+#endif // QT_CONFIG(tooltip)
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.inferenceTab), QCoreApplication.translate("MainWindow", u"Inference", None))
         self.lineEditCurrentImg.setPlaceholderText(QCoreApplication.translate("MainWindow", u"Results not loaded ->", None))
         self.toolButtonPrev.setText(QCoreApplication.translate("MainWindow", u"...", None))

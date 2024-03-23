@@ -1,5 +1,6 @@
 import logging
 import re
+from pathlib import Path
 
 from PySide6.QtWidgets import QPlainTextEdit, QApplication
 

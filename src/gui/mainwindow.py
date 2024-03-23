@@ -1,10 +1,12 @@
 import logging
 from enum import IntEnum
 from pathlib import Path
+from typing import Union
 
-from PySide6.QtCore import Qt
+from PySide6.QtCore import Qt, QObject
 from PySide6.QtGui import QPixmap
-from PySide6.QtWidgets import (QMainWindow, QSpinBox, QComboBox, QFileDialog, QGraphicsScene, QGraphicsPixmapItem)
+from PySide6.QtWidgets import (QMainWindow, QSpinBox, QComboBox, QFileDialog, QGraphicsScene, QGraphicsPixmapItem,
+                               QDoubleSpinBox)
 from ultralytics.utils import LOGGER as YOLO_LOGGER
 
 from src.gui.generated.ui_mainwindow import Ui_MainWindow
@@ -57,6 +59,7 @@ class AppMainWindow(QMainWindow):
         self.ui.pushButtonSelectModel.clicked.connect(self.select_model)
         self.ui.pushButtonSelectDataset.clicked.connect(self.select_dataset)
         self.ui.pushButtonTrain.clicked.connect(self.train)
+        self.ui.pushButtonVal.clicked.connect(self.val)
         self.ui.pushButtonLoadResults.clicked.connect(self.select_results)
 
         self.ui.toolButtonNext.clicked.connect(lambda _: self.change_image(Direction.NEXT))
@@ -72,11 +75,11 @@ class AppMainWindow(QMainWindow):
 
         self.ui.splitter.splitterMoved.connect(self.splitter_moved)
 
-        syntax_highlighter = SyntaxHighlighter(self.ui.plainTextEditLog.document())
+        _ = SyntaxHighlighter(self.ui.plainTextEditLog.document())
 
         # FOR TESTING
-        self.ui.lineEditSelectModel.setText(r"F:/School/Ing/DIPLOMA/YoloQT/src/models/yolov8n.pt")
-        self.ui.lineEditSelectDataset.setText(r"F:/School/Ing/DIPLOMA/YoloQT/src/datasets/exdark/data.yaml")
+        self.ui.lineEditSelectModel.setText(r"F:/School/Ing/DIPLOMA/YoloQT/models/yolov8n.pt")
+        self.ui.lineEditSelectDataset.setText(r"F:/School/Ing/DIPLOMA/YoloQT/datasets/exdark_little/data.yaml")
 
         self.save_dir: Path = Path()
         self.results: list[Path] = []
@@ -110,27 +113,39 @@ class AppMainWindow(QMainWindow):
             return
         self.load_image(self.results[0])
 
-    def train(self):
+    def get_base_params(self) -> Union[dict, None]:
         model_pth = self.ui.lineEditSelectModel.text()
         dataset_pth = self.ui.lineEditSelectDataset.text()
         if model_pth == "" or dataset_pth == "":
             msg = "Please select a model and dataset first!"
             logging.error(msg)
-            return
+            return None
+        return {'model': Path(model_pth), 'data': Path(dataset_pth)}
 
-        params = {'model': Path(model_pth), 'data': Path(dataset_pth)}
-        child_objects = [obj for obj in self.ui.groupBoxTrainArgs.children() if isinstance(obj, (QSpinBox, QComboBox))]
-        for child_obj in child_objects:
-            val = child_obj.value() if isinstance(child_obj, QSpinBox) else child_obj.currentText()
-            if isinstance(val, str) and val.isdigit():
-                val = int(val)
-            params[child_obj.toolTip()] = val
+    def train(self):
+        params = self.get_base_params()
+        params.update(qobjects2dict(self.ui.groupBoxTrainArgs.children()))
 
         self.yolo_log_handler.total_epoch = params['epochs']
         results = yoloiface.train(params)
 
         if not results:
             msg = "Training failed!"
+            logging.error(msg)
+            return
+
+        self.results = [res_file for res_file in results.save_dir.iterdir()
+                        if res_file.suffix in [".jpg", ".png", ".jpeg"]]
+        self.load_image(self.results[0])
+
+    def val(self):
+        params = self.get_base_params()
+        params.update(qobjects2dict(self.ui.groupBoxValArgs.children()))
+
+        results = yoloiface.val(params)
+
+        if not results:
+            msg = "Validation failed"
             logging.error(msg)
             return
 
@@ -166,5 +181,16 @@ class AppMainWindow(QMainWindow):
     def resizeEvent(self, event):
         self.ui.graphicsView.fitInView(self.ui.graphicsView.sceneRect())
 
-    def splitter_moved(self, pos: int, index: int):
+    def splitter_moved(self):
         self.ui.graphicsView.fitInView(self.ui.graphicsView.sceneRect())
+
+
+def qobjects2dict(data: list[QObject]) -> dict:
+    q_objects = [obj for obj in data if isinstance(obj, (QSpinBox, QDoubleSpinBox, QComboBox))]
+    result = {}
+    for obj in q_objects:
+        val = obj.currentText() if isinstance(obj, QComboBox) else obj.value()
+        if isinstance(val, str) and val.isdigit():
+            val = int(val)
+        result[obj.toolTip()] = val
+    return result
