@@ -29,6 +29,10 @@ class YoloLogHandler(logging.Handler):
         self.total_epoch = 0
         self.current_epoch = 1
 
+    def reset_epochs(self):
+        self.total_epoch = 0
+        self.current_epoch = 1
+
     def emit(self, record):
         msg = re.sub(r'\s+', ' ', self.format(record).strip())
         if 'Epoch' in msg:
@@ -37,6 +41,8 @@ class YoloLogHandler(logging.Handler):
             self.widget.appendPlainText(msg)
         elif 'Model summary' in msg:
             self.widget.appendPlainText(f"\n{msg}")
+        elif 'epochs completed in' in msg:
+            self.widget.appendPlainText(msg)
         elif 'Results saved to' in msg:
             msg = remove_ansi_codes(msg)
             _, part2 = msg.split("Results saved to ")
