@@ -137,8 +137,6 @@ class Ui_MainWindow(object):
         self.gridLayout_2.addWidget(self.comboBoxSizeImage, 3, 1, 1, 1)
 
         self.comboBoxDevice = QComboBox(self.groupBoxTrainArgs)
-        self.comboBoxDevice.addItem("")
-        self.comboBoxDevice.addItem("")
         self.comboBoxDevice.setObjectName(u"comboBoxDevice")
 
         self.gridLayout_2.addWidget(self.comboBoxDevice, 6, 1, 1, 1)
@@ -233,8 +231,6 @@ class Ui_MainWindow(object):
         self.gridLayout_6.addWidget(self.labelDevice_2, 5, 0, 1, 1)
 
         self.comboBoxDevice_2 = QComboBox(self.groupBoxValArgs)
-        self.comboBoxDevice_2.addItem("")
-        self.comboBoxDevice_2.addItem("")
         self.comboBoxDevice_2.setObjectName(u"comboBoxDevice_2")
 
         self.gridLayout_6.addWidget(self.comboBoxDevice_2, 5, 1, 1, 1)
@@ -411,9 +407,6 @@ class Ui_MainWindow(object):
 #if QT_CONFIG(tooltip)
         self.comboBoxSizeImage.setToolTip(QCoreApplication.translate("MainWindow", u"imgsz", None))
 #endif // QT_CONFIG(tooltip)
-        self.comboBoxDevice.setItemText(0, QCoreApplication.translate("MainWindow", u"0", None))
-        self.comboBoxDevice.setItemText(1, QCoreApplication.translate("MainWindow", u"cpu", None))
-
 #if QT_CONFIG(tooltip)
         self.comboBoxDevice.setToolTip(QCoreApplication.translate("MainWindow", u"device", None))
 #endif // QT_CONFIG(tooltip)
@@ -438,9 +431,6 @@ class Ui_MainWindow(object):
         self.doubleSpinBoxConf.setToolTip(QCoreApplication.translate("MainWindow", u"conf", None))
 #endif // QT_CONFIG(tooltip)
         self.labelDevice_2.setText(QCoreApplication.translate("MainWindow", u"Device", None))
-        self.comboBoxDevice_2.setItemText(0, QCoreApplication.translate("MainWindow", u"CPU", None))
-        self.comboBoxDevice_2.setItemText(1, QCoreApplication.translate("MainWindow", u"0", None))
-
 #if QT_CONFIG(tooltip)
         self.comboBoxDevice_2.setToolTip(QCoreApplication.translate("MainWindow", u"device", None))
 #endif // QT_CONFIG(tooltip)

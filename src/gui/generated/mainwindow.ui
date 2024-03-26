@@ -225,16 +225,6 @@
                     <property name="toolTip">
                      <string>device</string>
                     </property>
-                    <item>
-                     <property name="text">
-                      <string>0</string>
-                     </property>
-                    </item>
-                    <item>
-                     <property name="text">
-                      <string>cpu</string>
-                     </property>
-                    </item>
                    </widget>
                   </item>
                   <item row="6" column="0">
@@ -385,16 +375,6 @@
                     <property name="toolTip">
                      <string>device</string>
                     </property>
-                    <item>
-                     <property name="text">
-                      <string>CPU</string>
-                     </property>
-                    </item>
-                    <item>
-                     <property name="text">
-                      <string>0</string>
-                     </property>
-                    </item>
                    </widget>
                   </item>
                   <item row="2" column="0">

@@ -11,11 +11,12 @@ from ultralytics.utils import LOGGER as YOLO_LOGGER
 
 from src.gui.generated.ui_mainwindow import Ui_MainWindow
 from src.utils import yoloiface
+from src.utils.device import detect_available_devices
 from src.utils.loghandlers import YoloLogHandler, MyLogHandler
 from src.utils.syntaxhighlighter import SyntaxHighlighter
 from src.utils.validator import is_dataset_ok, is_model_ok, YoloMode
 
-logging.basicConfig(level=logging.INFO)
+logging.basicConfig(level=logging.DEBUG)
 
 
 class Direction(IntEnum):
@@ -59,6 +60,15 @@ class AppMainWindow(QMainWindow):
         super().__init__()
         self.ui = Ui_MainWindow()
         self.ui.setupUi(self)
+        _ = SyntaxHighlighter(self.ui.plainTextEditLog.document())
+        self.yolo_log_handler = YoloLogHandler(self.ui.plainTextEditLog)
+        YOLO_LOGGER.addHandler(self.yolo_log_handler)
+        my_log_handler = MyLogHandler(self.ui.plainTextEditLog)
+        formatter = logging.Formatter('%(asctime)s [%(levelname)s] %(message)s', datefmt="%H:%M:%S")
+        my_log_handler.setFormatter(formatter)
+        logging.getLogger().addHandler(my_log_handler)
+        self.init_device_combobox()
+
         self.ui.pushButtonSelectModel.clicked.connect(self.select_model)
         self.ui.pushButtonSelectDataset.clicked.connect(self.select_dataset)
         self.ui.pushButtonTrain.clicked.connect(self.train)
@@ -68,17 +78,7 @@ class AppMainWindow(QMainWindow):
         self.ui.toolButtonNext.clicked.connect(lambda _: self.change_image(Direction.NEXT))
         self.ui.toolButtonPrev.clicked.connect(lambda _: self.change_image(Direction.PREV))
 
-        self.yolo_log_handler = YoloLogHandler(self.ui.plainTextEditLog)
-        YOLO_LOGGER.addHandler(self.yolo_log_handler)
-
-        my_log_handler = MyLogHandler(self.ui.plainTextEditLog)
-        formatter = logging.Formatter('%(asctime)s [%(levelname)s] %(message)s', datefmt="%H:%M:%S")
-        my_log_handler.setFormatter(formatter)
-        logging.getLogger().addHandler(my_log_handler)
-
         self.ui.splitter.splitterMoved.connect(self.splitter_moved)
-
-        _ = SyntaxHighlighter(self.ui.plainTextEditLog.document())
 
         # FOR TESTING
         self.ui.lineEditSelectModel.setText(r"F:/School/Ing/DIPLOMA/YoloQT/models/yolov8n.pt")
@@ -86,6 +86,13 @@ class AppMainWindow(QMainWindow):
 
         self.save_dir: Path = Path()
         self.results: list[Path] = []
+
+    def init_device_combobox(self):
+        """Add items to combo box for device based available devices."""
+        available_devices = detect_available_devices()
+        for dev in available_devices:
+            self.ui.comboBoxDevice.addItem(str(dev))
+            self.ui.comboBoxDevice_2.addItem(str(dev))
 
     def select_model(self):
         dlg = ModelSelectDialog(self)
