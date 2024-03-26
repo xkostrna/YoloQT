@@ -13,7 +13,7 @@ from src.gui.generated.ui_mainwindow import Ui_MainWindow
 from src.utils import yoloiface
 from src.utils.loghandlers import YoloLogHandler, MyLogHandler
 from src.utils.syntaxhighlighter import SyntaxHighlighter
-from src.utils.validator import get_dataset_state, DatasetState, YoloMode
+from src.utils.validator import is_dataset_ok, is_model_ok, YoloMode
 
 logging.basicConfig(level=logging.INFO)
 
@@ -127,15 +127,13 @@ class AppMainWindow(QMainWindow):
 
     def train(self):
         params = self.get_base_params()
-        if not is_dataset_ok(params['data'], YoloMode.TRAIN):
+        if not is_model_ok(params['model'], YoloMode.TRAIN) or not is_dataset_ok(params['data'], YoloMode.TRAIN):
             return
 
         params.update(qobjects2dict(self.ui.groupBoxTrainArgs.children()))
-
         self.yolo_log_handler.reset_epochs()
         self.yolo_log_handler.total_epoch = params['epochs']
         results = yoloiface.train(params)
-
         if not results:
             msg = "Training failed!"
             logging.error(msg)
@@ -147,13 +145,11 @@ class AppMainWindow(QMainWindow):
 
     def val(self):
         params = self.get_base_params()
-        if not is_dataset_ok(params['data'], YoloMode.VAL):
+        if not is_model_ok(params['model'], YoloMode.VAL) or not is_dataset_ok(params['data'], YoloMode.VAL):
             return
 
         params.update(qobjects2dict(self.ui.groupBoxValArgs.children()))
-
         results = yoloiface.val(params)
-
         if not results:
             msg = "Validation failed"
             logging.error(msg)
@@ -193,24 +189,6 @@ class AppMainWindow(QMainWindow):
 
     def splitter_moved(self):
         self.ui.graphicsView.fitInView(self.ui.graphicsView.sceneRect(), Qt.KeepAspectRatio)
-
-
-def is_dataset_ok(dataset_pth: Path, yolo_mode: YoloMode) -> bool:
-    dataset_state = get_dataset_state(dataset_pth, yolo_mode)
-    if dataset_state == DatasetState.OK:
-        msg = "Dataset is OK!"
-        logging.info(msg)
-        return True
-    elif dataset_state == DatasetState.NOT_EXIST:
-        msg = "Dataset does not exist!"
-        logging.error(msg)
-    elif dataset_state == DatasetState.WRONG_SUFFIX:
-        msg = "Dataset should be describe in .yaml file!"
-        logging.error(msg)
-    elif dataset_state.WRONG_FORMAT:
-        msg = "Dataset does not meet the required yolo format!"
-        logging.error(msg)
-    return False
 
 
 def qobjects2dict(data: list[QObject]) -> dict:
