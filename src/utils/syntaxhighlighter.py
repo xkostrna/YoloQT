@@ -17,7 +17,10 @@ class SyntaxHighlighter(QSyntaxHighlighter):
         super().__init__(parent)
 
         self.error = create_text_format(QColor('black'), QColor('red').lighter(128), QFont.Weight.Bold)
+        self.isok = create_text_format(QColor('black'), QColor('green').lighter(256))
 
     def highlightBlock(self, block):
         if '[ERROR]' in block:
             self.setFormat(0, len(block), self.error)
+        if '[INFO]' in block:
+            self.setFormat(0, len(block), self.isok)
