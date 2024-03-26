@@ -13,6 +13,7 @@ from src.gui.generated.ui_mainwindow import Ui_MainWindow
 from src.utils import yoloiface
 from src.utils.loghandlers import YoloLogHandler, MyLogHandler
 from src.utils.syntaxhighlighter import SyntaxHighlighter
+from src.utils.validator import get_dataset_state, DatasetState
 
 
 class Direction(IntEnum):
@@ -98,6 +99,8 @@ class AppMainWindow(QMainWindow):
         dlg.show()
 
     def update_dataset_text(self, text: str):
+        dataset_state = get_dataset_state(Path(text))
+        print(dataset_state)
         self.ui.lineEditSelectDataset.setText(text)
 
     def select_results(self):
@@ -123,6 +126,7 @@ class AppMainWindow(QMainWindow):
         return {'model': Path(model_pth), 'data': Path(dataset_pth)}
 
     def train(self):
+        self.yolo_log_handler.reset_epochs()
         params = self.get_base_params()
         params.update(qobjects2dict(self.ui.groupBoxTrainArgs.children()))
 
@@ -179,10 +183,10 @@ class AppMainWindow(QMainWindow):
         self.load_image(self.results[new_idx])
 
     def resizeEvent(self, event):
-        self.ui.graphicsView.fitInView(self.ui.graphicsView.sceneRect())
+        self.ui.graphicsView.fitInView(self.ui.graphicsView.sceneRect(), Qt.KeepAspectRatio)
 
     def splitter_moved(self):
-        self.ui.graphicsView.fitInView(self.ui.graphicsView.sceneRect())
+        self.ui.graphicsView.fitInView(self.ui.graphicsView.sceneRect(), Qt.KeepAspectRatio)
 
 
 def qobjects2dict(data: list[QObject]) -> dict:

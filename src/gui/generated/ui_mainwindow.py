@@ -89,7 +89,8 @@ class Ui_MainWindow(object):
         self.spinBoxEpochs.setObjectName(u"spinBoxEpochs")
         self.spinBoxEpochs.setMinimum(1)
         self.spinBoxEpochs.setMaximum(9999)
-        self.spinBoxEpochs.setSingleStep(10)
+        self.spinBoxEpochs.setSingleStep(1)
+        self.spinBoxEpochs.setValue(100)
 
         self.gridLayout_2.addWidget(self.spinBoxEpochs, 0, 1, 1, 1)
 
@@ -112,17 +113,19 @@ class Ui_MainWindow(object):
 
         self.spinBoxBatch = QSpinBox(self.groupBoxTrainArgs)
         self.spinBoxBatch.setObjectName(u"spinBoxBatch")
-        self.spinBoxBatch.setMinimum(8)
-        self.spinBoxBatch.setMaximum(128)
-        self.spinBoxBatch.setSingleStep(8)
+        self.spinBoxBatch.setMinimum(1)
+        self.spinBoxBatch.setMaximum(9999)
+        self.spinBoxBatch.setSingleStep(1)
+        self.spinBoxBatch.setValue(16)
 
         self.gridLayout_2.addWidget(self.spinBoxBatch, 2, 1, 1, 1)
 
         self.spinBoxPatience = QSpinBox(self.groupBoxTrainArgs)
         self.spinBoxPatience.setObjectName(u"spinBoxPatience")
-        self.spinBoxPatience.setMinimum(10)
-        self.spinBoxPatience.setMaximum(100)
-        self.spinBoxPatience.setSingleStep(10)
+        self.spinBoxPatience.setMinimum(1)
+        self.spinBoxPatience.setMaximum(9999)
+        self.spinBoxPatience.setSingleStep(1)
+        self.spinBoxPatience.setValue(100)
 
         self.gridLayout_2.addWidget(self.spinBoxPatience, 1, 1, 1, 1)
 
@@ -159,6 +162,7 @@ class Ui_MainWindow(object):
         self.spinBoxWorkers.setObjectName(u"spinBoxWorkers")
         self.spinBoxWorkers.setMinimum(1)
         self.spinBoxWorkers.setMaximum(8)
+        self.spinBoxWorkers.setSingleStep(1)
 
         self.gridLayout_2.addWidget(self.spinBoxWorkers, 7, 1, 1, 1)
 
@@ -170,8 +174,8 @@ class Ui_MainWindow(object):
         self.spinBoxSavePeriod = QSpinBox(self.groupBoxTrainArgs)
         self.spinBoxSavePeriod.setObjectName(u"spinBoxSavePeriod")
         self.spinBoxSavePeriod.setMinimum(-1)
-        self.spinBoxSavePeriod.setMaximum(100)
-        self.spinBoxSavePeriod.setSingleStep(10)
+        self.spinBoxSavePeriod.setMaximum(9999)
+        self.spinBoxSavePeriod.setSingleStep(1)
         self.spinBoxSavePeriod.setValue(-1)
 
         self.gridLayout_2.addWidget(self.spinBoxSavePeriod, 4, 1, 1, 1)
@@ -195,16 +199,16 @@ class Ui_MainWindow(object):
         self.gridLayout.addWidget(self.pushButtonTrain, 3, 2, 1, 1)
 
         self.tabWidget.addTab(self.trainTab, "")
-        self.inferenceTab = QWidget()
-        self.inferenceTab.setObjectName(u"inferenceTab")
-        self.gridLayout_7 = QGridLayout(self.inferenceTab)
+        self.validationTab = QWidget()
+        self.validationTab.setObjectName(u"validationTab")
+        self.gridLayout_7 = QGridLayout(self.validationTab)
         self.gridLayout_7.setObjectName(u"gridLayout_7")
-        self.pushButtonVal = QPushButton(self.inferenceTab)
+        self.pushButtonVal = QPushButton(self.validationTab)
         self.pushButtonVal.setObjectName(u"pushButtonVal")
 
         self.gridLayout_7.addWidget(self.pushButtonVal, 1, 2, 1, 1)
 
-        self.groupBoxValArgs = QGroupBox(self.inferenceTab)
+        self.groupBoxValArgs = QGroupBox(self.validationTab)
         self.groupBoxValArgs.setObjectName(u"groupBoxValArgs")
         self.gridLayout_6 = QGridLayout(self.groupBoxValArgs)
         self.gridLayout_6.setObjectName(u"gridLayout_6")
@@ -216,6 +220,8 @@ class Ui_MainWindow(object):
         self.doubleSpinBoxConf = QDoubleSpinBox(self.groupBoxValArgs)
         self.doubleSpinBoxConf.setObjectName(u"doubleSpinBoxConf")
         self.doubleSpinBoxConf.setDecimals(3)
+        self.doubleSpinBoxConf.setMinimum(0.001000000000000)
+        self.doubleSpinBoxConf.setMaximum(0.990000000000000)
         self.doubleSpinBoxConf.setSingleStep(0.001000000000000)
         self.doubleSpinBoxConf.setValue(0.001000000000000)
 
@@ -245,6 +251,8 @@ class Ui_MainWindow(object):
 
         self.doubleSpinBoxIoU = QDoubleSpinBox(self.groupBoxValArgs)
         self.doubleSpinBoxIoU.setObjectName(u"doubleSpinBoxIoU")
+        self.doubleSpinBoxIoU.setMinimum(0.010000000000000)
+        self.doubleSpinBoxIoU.setMaximum(0.990000000000000)
         self.doubleSpinBoxIoU.setSingleStep(0.010000000000000)
         self.doubleSpinBoxIoU.setValue(0.600000000000000)
 
@@ -263,17 +271,17 @@ class Ui_MainWindow(object):
         self.spinBoxMaxDet = QSpinBox(self.groupBoxValArgs)
         self.spinBoxMaxDet.setObjectName(u"spinBoxMaxDet")
         self.spinBoxMaxDet.setMinimum(1)
-        self.spinBoxMaxDet.setMaximum(1000)
-        self.spinBoxMaxDet.setSingleStep(10)
+        self.spinBoxMaxDet.setMaximum(9999)
+        self.spinBoxMaxDet.setSingleStep(1)
         self.spinBoxMaxDet.setValue(300)
 
         self.gridLayout_6.addWidget(self.spinBoxMaxDet, 4, 1, 1, 1)
 
         self.spinBoxBatch_2 = QSpinBox(self.groupBoxValArgs)
         self.spinBoxBatch_2.setObjectName(u"spinBoxBatch_2")
-        self.spinBoxBatch_2.setMinimum(8)
-        self.spinBoxBatch_2.setMaximum(128)
-        self.spinBoxBatch_2.setSingleStep(8)
+        self.spinBoxBatch_2.setMinimum(1)
+        self.spinBoxBatch_2.setMaximum(9999)
+        self.spinBoxBatch_2.setSingleStep(1)
         self.spinBoxBatch_2.setValue(16)
 
         self.gridLayout_6.addWidget(self.spinBoxBatch_2, 1, 1, 1, 1)
@@ -288,7 +296,7 @@ class Ui_MainWindow(object):
 
         self.gridLayout_7.addWidget(self.groupBoxValArgs, 0, 0, 1, 3)
 
-        self.tabWidget.addTab(self.inferenceTab, "")
+        self.tabWidget.addTab(self.validationTab, "")
 
         self.gridLayout_3.addWidget(self.tabWidget, 2, 0, 1, 2)
 
@@ -455,7 +463,7 @@ class Ui_MainWindow(object):
 #if QT_CONFIG(tooltip)
         self.comboBoxImageSize.setToolTip(QCoreApplication.translate("MainWindow", u"imgsz", None))
 #endif // QT_CONFIG(tooltip)
-        self.tabWidget.setTabText(self.tabWidget.indexOf(self.inferenceTab), QCoreApplication.translate("MainWindow", u"Inference", None))
+        self.tabWidget.setTabText(self.tabWidget.indexOf(self.validationTab), QCoreApplication.translate("MainWindow", u"Validation", None))
         self.lineEditCurrentImg.setPlaceholderText(QCoreApplication.translate("MainWindow", u"Results not loaded ->", None))
         self.toolButtonPrev.setText(QCoreApplication.translate("MainWindow", u"...", None))
         self.pushButtonLoadResults.setText(QCoreApplication.translate("MainWindow", u"Load results", None))
