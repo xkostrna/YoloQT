@@ -141,12 +141,15 @@ class AppMainWindow(QMainWindow):
             logging.error(msg)
             return
 
-        self.results = [res_file for res_file in results.save_dir.iterdir()
+        self.results = [res_file.absolute() for res_file in results.save_dir.iterdir()
                         if res_file.suffix in [".jpg", ".png", ".jpeg"]]
         self.load_image(self.results[0])
 
     def val(self):
         params = self.get_base_params()
+        if not is_dataset_ok(params['data'], YoloMode.VAL):
+            return
+
         params.update(qobjects2dict(self.ui.groupBoxValArgs.children()))
 
         results = yoloiface.val(params)
