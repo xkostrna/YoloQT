@@ -18,8 +18,9 @@ from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
 from PySide6.QtWidgets import (QApplication, QComboBox, QDoubleSpinBox, QGraphicsView,
     QGridLayout, QGroupBox, QLabel, QLineEdit,
     QMainWindow, QMenuBar, QPlainTextEdit, QPushButton,
-    QSizePolicy, QSpinBox, QSplitter, QStatusBar,
-    QTabWidget, QToolButton, QVBoxLayout, QWidget)
+    QSizePolicy, QSpacerItem, QSpinBox, QSplitter,
+    QStatusBar, QTabWidget, QToolButton, QVBoxLayout,
+    QWidget)
 
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
@@ -48,16 +49,10 @@ class Ui_MainWindow(object):
         self.widget_2.setObjectName(u"widget_2")
         self.gridLayout_3 = QGridLayout(self.widget_2)
         self.gridLayout_3.setObjectName(u"gridLayout_3")
-        self.lineEditSelectDataset = QLineEdit(self.widget_2)
-        self.lineEditSelectDataset.setObjectName(u"lineEditSelectDataset")
-        self.lineEditSelectDataset.setClearButtonEnabled(True)
+        self.pushButtonSelectModel = QPushButton(self.widget_2)
+        self.pushButtonSelectModel.setObjectName(u"pushButtonSelectModel")
 
-        self.gridLayout_3.addWidget(self.lineEditSelectDataset, 1, 1, 1, 1)
-
-        self.pushButtonSelectDataset = QPushButton(self.widget_2)
-        self.pushButtonSelectDataset.setObjectName(u"pushButtonSelectDataset")
-
-        self.gridLayout_3.addWidget(self.pushButtonSelectDataset, 1, 0, 1, 1)
+        self.gridLayout_3.addWidget(self.pushButtonSelectModel, 0, 0, 1, 1)
 
         self.lineEditSelectModel = QLineEdit(self.widget_2)
         self.lineEditSelectModel.setObjectName(u"lineEditSelectModel")
@@ -65,10 +60,16 @@ class Ui_MainWindow(object):
 
         self.gridLayout_3.addWidget(self.lineEditSelectModel, 0, 1, 1, 1)
 
-        self.pushButtonSelectModel = QPushButton(self.widget_2)
-        self.pushButtonSelectModel.setObjectName(u"pushButtonSelectModel")
+        self.pushButtonSelectDataset = QPushButton(self.widget_2)
+        self.pushButtonSelectDataset.setObjectName(u"pushButtonSelectDataset")
 
-        self.gridLayout_3.addWidget(self.pushButtonSelectModel, 0, 0, 1, 1)
+        self.gridLayout_3.addWidget(self.pushButtonSelectDataset, 1, 0, 1, 1)
+
+        self.lineEditSelectDataset = QLineEdit(self.widget_2)
+        self.lineEditSelectDataset.setObjectName(u"lineEditSelectDataset")
+        self.lineEditSelectDataset.setClearButtonEnabled(True)
+
+        self.gridLayout_3.addWidget(self.lineEditSelectDataset, 1, 1, 1, 1)
 
         self.tabWidget = QTabWidget(self.widget_2)
         self.tabWidget.setObjectName(u"tabWidget")
@@ -293,6 +294,90 @@ class Ui_MainWindow(object):
         self.gridLayout_7.addWidget(self.groupBoxValArgs, 0, 0, 1, 3)
 
         self.tabWidget.addTab(self.validationTab, "")
+        self.predictionTab = QWidget()
+        self.predictionTab.setObjectName(u"predictionTab")
+        self.gridLayout_9 = QGridLayout(self.predictionTab)
+        self.gridLayout_9.setObjectName(u"gridLayout_9")
+        self.groupBoxPredictArgs = QGroupBox(self.predictionTab)
+        self.groupBoxPredictArgs.setObjectName(u"groupBoxPredictArgs")
+        self.gridLayout_8 = QGridLayout(self.groupBoxPredictArgs)
+        self.gridLayout_8.setObjectName(u"gridLayout_8")
+        self.spinBoxMaxDet_2 = QSpinBox(self.groupBoxPredictArgs)
+        self.spinBoxMaxDet_2.setObjectName(u"spinBoxMaxDet_2")
+        self.spinBoxMaxDet_2.setMinimum(1)
+        self.spinBoxMaxDet_2.setMaximum(9999)
+        self.spinBoxMaxDet_2.setValue(300)
+
+        self.gridLayout_8.addWidget(self.spinBoxMaxDet_2, 3, 3, 1, 2)
+
+        self.labelIoU_2 = QLabel(self.groupBoxPredictArgs)
+        self.labelIoU_2.setObjectName(u"labelIoU_2")
+
+        self.gridLayout_8.addWidget(self.labelIoU_2, 1, 0, 1, 3)
+
+        self.comboBoxDevice_3 = QComboBox(self.groupBoxPredictArgs)
+        self.comboBoxDevice_3.setObjectName(u"comboBoxDevice_3")
+
+        self.gridLayout_8.addWidget(self.comboBoxDevice_3, 2, 3, 1, 2)
+
+        self.labelConf_2 = QLabel(self.groupBoxPredictArgs)
+        self.labelConf_2.setObjectName(u"labelConf_2")
+
+        self.gridLayout_8.addWidget(self.labelConf_2, 0, 0, 1, 2)
+
+        self.labelDevice_3 = QLabel(self.groupBoxPredictArgs)
+        self.labelDevice_3.setObjectName(u"labelDevice_3")
+
+        self.gridLayout_8.addWidget(self.labelDevice_3, 2, 0, 1, 1)
+
+        self.doubleSpinBoxConf_2 = QDoubleSpinBox(self.groupBoxPredictArgs)
+        self.doubleSpinBoxConf_2.setObjectName(u"doubleSpinBoxConf_2")
+        self.doubleSpinBoxConf_2.setMinimum(0.250000000000000)
+        self.doubleSpinBoxConf_2.setMaximum(0.990000000000000)
+        self.doubleSpinBoxConf_2.setSingleStep(0.010000000000000)
+        self.doubleSpinBoxConf_2.setValue(0.250000000000000)
+
+        self.gridLayout_8.addWidget(self.doubleSpinBoxConf_2, 0, 3, 1, 2)
+
+        self.labelMaxDet_2 = QLabel(self.groupBoxPredictArgs)
+        self.labelMaxDet_2.setObjectName(u"labelMaxDet_2")
+
+        self.gridLayout_8.addWidget(self.labelMaxDet_2, 3, 0, 1, 3)
+
+        self.doubleSpinBoxIoU_2 = QDoubleSpinBox(self.groupBoxPredictArgs)
+        self.doubleSpinBoxIoU_2.setObjectName(u"doubleSpinBoxIoU_2")
+        self.doubleSpinBoxIoU_2.setMinimum(0.010000000000000)
+        self.doubleSpinBoxIoU_2.setMaximum(0.990000000000000)
+        self.doubleSpinBoxIoU_2.setSingleStep(0.010000000000000)
+        self.doubleSpinBoxIoU_2.setValue(0.700000000000000)
+
+        self.gridLayout_8.addWidget(self.doubleSpinBoxIoU_2, 1, 3, 1, 2)
+
+
+        self.gridLayout_9.addWidget(self.groupBoxPredictArgs, 1, 0, 1, 3)
+
+        self.pushButtonPredict = QPushButton(self.predictionTab)
+        self.pushButtonPredict.setObjectName(u"pushButtonPredict")
+        self.pushButtonPredict.setMinimumSize(QSize(134, 0))
+        self.pushButtonPredict.setMaximumSize(QSize(16777215, 16777215))
+
+        self.gridLayout_9.addWidget(self.pushButtonPredict, 2, 1, 1, 2)
+
+        self.lineEditSource = QLineEdit(self.predictionTab)
+        self.lineEditSource.setObjectName(u"lineEditSource")
+
+        self.gridLayout_9.addWidget(self.lineEditSource, 0, 0, 1, 1)
+
+        self.horizontalSpacer = QSpacerItem(40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
+
+        self.gridLayout_9.addItem(self.horizontalSpacer, 2, 0, 1, 1)
+
+        self.pushButtonSelectSource = QPushButton(self.predictionTab)
+        self.pushButtonSelectSource.setObjectName(u"pushButtonSelectSource")
+
+        self.gridLayout_9.addWidget(self.pushButtonSelectSource, 0, 1, 1, 2)
+
+        self.tabWidget.addTab(self.predictionTab, "")
 
         self.gridLayout_3.addWidget(self.tabWidget, 2, 0, 1, 2)
 
@@ -371,13 +456,13 @@ class Ui_MainWindow(object):
 
     def retranslateUi(self, MainWindow):
         MainWindow.setWindowTitle(QCoreApplication.translate("MainWindow", u"YoloQT", None))
-        self.lineEditSelectDataset.setPlaceholderText(QCoreApplication.translate("MainWindow", u"Selected dataset path", None))
-        self.pushButtonSelectDataset.setText(QCoreApplication.translate("MainWindow", u"Select dataset", None))
-        self.lineEditSelectModel.setPlaceholderText(QCoreApplication.translate("MainWindow", u"Selected model path", None))
 #if QT_CONFIG(tooltip)
         self.pushButtonSelectModel.setToolTip(QCoreApplication.translate("MainWindow", u"Opens dialog and lets you select model for training", None))
 #endif // QT_CONFIG(tooltip)
         self.pushButtonSelectModel.setText(QCoreApplication.translate("MainWindow", u"Select model", None))
+        self.lineEditSelectModel.setPlaceholderText(QCoreApplication.translate("MainWindow", u"Selected model path", None))
+        self.pushButtonSelectDataset.setText(QCoreApplication.translate("MainWindow", u"Select dataset", None))
+        self.lineEditSelectDataset.setPlaceholderText(QCoreApplication.translate("MainWindow", u"Selected dataset path", None))
         self.groupBoxTrainArgs.setTitle(QCoreApplication.translate("MainWindow", u"Arguments", None))
         self.labelBatch.setText(QCoreApplication.translate("MainWindow", u"Batch", None))
 #if QT_CONFIG(tooltip)
@@ -454,6 +539,14 @@ class Ui_MainWindow(object):
         self.comboBoxImageSize.setToolTip(QCoreApplication.translate("MainWindow", u"imgsz", None))
 #endif // QT_CONFIG(tooltip)
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.validationTab), QCoreApplication.translate("MainWindow", u"Validation", None))
+        self.groupBoxPredictArgs.setTitle(QCoreApplication.translate("MainWindow", u"Arguments", None))
+        self.labelIoU_2.setText(QCoreApplication.translate("MainWindow", u"Intersection over union", None))
+        self.labelConf_2.setText(QCoreApplication.translate("MainWindow", u"Confidence", None))
+        self.labelDevice_3.setText(QCoreApplication.translate("MainWindow", u"Device", None))
+        self.labelMaxDet_2.setText(QCoreApplication.translate("MainWindow", u"Maximum number of detections", None))
+        self.pushButtonPredict.setText(QCoreApplication.translate("MainWindow", u"Predict", None))
+        self.pushButtonSelectSource.setText(QCoreApplication.translate("MainWindow", u"Select source", None))
+        self.tabWidget.setTabText(self.tabWidget.indexOf(self.predictionTab), QCoreApplication.translate("MainWindow", u"Predict", None))
         self.lineEditCurrentImg.setPlaceholderText(QCoreApplication.translate("MainWindow", u"Results not loaded ->", None))
         self.toolButtonPrev.setText(QCoreApplication.translate("MainWindow", u"...", None))
         self.pushButtonLoadResults.setText(QCoreApplication.translate("MainWindow", u"Load results", None))

@@ -37,20 +37,13 @@
         <item row="0" column="0">
          <widget class="QWidget" name="widget_2" native="true">
           <layout class="QGridLayout" name="gridLayout_3">
-           <item row="1" column="1">
-            <widget class="QLineEdit" name="lineEditSelectDataset">
-             <property name="placeholderText">
-              <string>Selected dataset path</string>
+           <item row="0" column="0">
+            <widget class="QPushButton" name="pushButtonSelectModel">
+             <property name="toolTip">
+              <string>Opens dialog and lets you select model for training</string>
              </property>
-             <property name="clearButtonEnabled">
-              <bool>true</bool>
-             </property>
-            </widget>
-           </item>
-           <item row="1" column="0">
-            <widget class="QPushButton" name="pushButtonSelectDataset">
              <property name="text">
-              <string>Select dataset</string>
+              <string>Select model</string>
              </property>
             </widget>
            </item>
@@ -64,13 +57,20 @@
              </property>
             </widget>
            </item>
-           <item row="0" column="0">
-            <widget class="QPushButton" name="pushButtonSelectModel">
-             <property name="toolTip">
-              <string>Opens dialog and lets you select model for training</string>
-             </property>
+           <item row="1" column="0">
+            <widget class="QPushButton" name="pushButtonSelectDataset">
              <property name="text">
-              <string>Select model</string>
+              <string>Select dataset</string>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="1">
+            <widget class="QLineEdit" name="lineEditSelectDataset">
+             <property name="placeholderText">
+              <string>Selected dataset path</string>
+             </property>
+             <property name="clearButtonEnabled">
+              <bool>true</bool>
              </property>
             </widget>
            </item>
@@ -480,6 +480,140 @@
                    </widget>
                   </item>
                  </layout>
+                </widget>
+               </item>
+              </layout>
+             </widget>
+             <widget class="QWidget" name="predictionTab">
+              <attribute name="title">
+               <string>Predict</string>
+              </attribute>
+              <layout class="QGridLayout" name="gridLayout_9">
+               <item row="1" column="0" colspan="3">
+                <widget class="QGroupBox" name="groupBoxPredictArgs">
+                 <property name="title">
+                  <string>Arguments</string>
+                 </property>
+                 <layout class="QGridLayout" name="gridLayout_8">
+                  <item row="3" column="3" colspan="2">
+                   <widget class="QSpinBox" name="spinBoxMaxDet_2">
+                    <property name="minimum">
+                     <number>1</number>
+                    </property>
+                    <property name="maximum">
+                     <number>9999</number>
+                    </property>
+                    <property name="value">
+                     <number>300</number>
+                    </property>
+                   </widget>
+                  </item>
+                  <item row="1" column="0" colspan="3">
+                   <widget class="QLabel" name="labelIoU_2">
+                    <property name="text">
+                     <string>Intersection over union</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item row="2" column="3" colspan="2">
+                   <widget class="QComboBox" name="comboBoxDevice_3"/>
+                  </item>
+                  <item row="0" column="0" colspan="2">
+                   <widget class="QLabel" name="labelConf_2">
+                    <property name="text">
+                     <string>Confidence</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item row="2" column="0">
+                   <widget class="QLabel" name="labelDevice_3">
+                    <property name="text">
+                     <string>Device</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item row="0" column="3" colspan="2">
+                   <widget class="QDoubleSpinBox" name="doubleSpinBoxConf_2">
+                    <property name="minimum">
+                     <double>0.250000000000000</double>
+                    </property>
+                    <property name="maximum">
+                     <double>0.990000000000000</double>
+                    </property>
+                    <property name="singleStep">
+                     <double>0.010000000000000</double>
+                    </property>
+                    <property name="value">
+                     <double>0.250000000000000</double>
+                    </property>
+                   </widget>
+                  </item>
+                  <item row="3" column="0" colspan="3">
+                   <widget class="QLabel" name="labelMaxDet_2">
+                    <property name="text">
+                     <string>Maximum number of detections</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item row="1" column="3" colspan="2">
+                   <widget class="QDoubleSpinBox" name="doubleSpinBoxIoU_2">
+                    <property name="minimum">
+                     <double>0.010000000000000</double>
+                    </property>
+                    <property name="maximum">
+                     <double>0.990000000000000</double>
+                    </property>
+                    <property name="singleStep">
+                     <double>0.010000000000000</double>
+                    </property>
+                    <property name="value">
+                     <double>0.700000000000000</double>
+                    </property>
+                   </widget>
+                  </item>
+                 </layout>
+                </widget>
+               </item>
+               <item row="2" column="1" colspan="2">
+                <widget class="QPushButton" name="pushButtonPredict">
+                 <property name="minimumSize">
+                  <size>
+                   <width>134</width>
+                   <height>0</height>
+                  </size>
+                 </property>
+                 <property name="maximumSize">
+                  <size>
+                   <width>16777215</width>
+                   <height>16777215</height>
+                  </size>
+                 </property>
+                 <property name="text">
+                  <string>Predict</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="0" column="0">
+                <widget class="QLineEdit" name="lineEditSource"/>
+               </item>
+               <item row="2" column="0">
+                <spacer name="horizontalSpacer">
+                 <property name="orientation">
+                  <enum>Qt::Horizontal</enum>
+                 </property>
+                 <property name="sizeHint" stdset="0">
+                  <size>
+                   <width>40</width>
+                   <height>20</height>
+                  </size>
+                 </property>
+                </spacer>
+               </item>
+               <item row="0" column="1" colspan="2">
+                <widget class="QPushButton" name="pushButtonSelectSource">
+                 <property name="text">
+                  <string>Select source</string>
+                 </property>
                 </widget>
                </item>
               </layout>

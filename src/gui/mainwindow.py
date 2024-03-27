@@ -199,6 +199,11 @@ class AppMainWindow(QMainWindow):
 
 
 def qobjects2dict(data: list[QObject]) -> dict:
+    """Creates a dictionary from data which is list of QObjects.
+
+    We only extract value or text from QSpinBox, QDoubleSpinBox a QComboBox.
+    Keys in dictionary are actually toolTips of those QWidgets.
+    """
     q_objects = [obj for obj in data if isinstance(obj, (QSpinBox, QDoubleSpinBox, QComboBox))]
     result = {}
     for obj in q_objects:

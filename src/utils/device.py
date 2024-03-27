@@ -3,6 +3,7 @@ import logging
 import torch
 
 
+# https://stackoverflow.com/questions/48152674/how-do-i-check-if-pytorch-is-using-the-gpu
 def detect_available_devices():
     """Returns a list of available devices
 
