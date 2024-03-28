@@ -93,3 +93,16 @@ def is_model_ok(model_pth: Path, yolo_mode: YoloMode) -> bool:
     msg = "Model file is OK!"
     logging.info(msg)
     return True
+
+
+def is_image_source_ok(image_pth: Path) -> bool:
+    """Checks if path provided points to valid image"""
+    if not image_pth.is_file():
+        msg = "Image file does not exist or is not a file!"
+        logging.error(msg)
+        return False
+    if image_pth.suffix not in ['.png', '.jpg', '.jpeg']:
+        msg = "File path is not an image"
+        logging.error(msg)
+        return False
+    return True

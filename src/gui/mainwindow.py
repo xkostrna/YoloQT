@@ -15,9 +15,9 @@ from src.utils import yoloiface
 from src.utils.device import detect_available_devices
 from src.utils.loghandlers import YoloLogHandler, MyLogHandler
 from src.utils.syntaxhighlighter import SyntaxHighlighter
-from src.utils.validator import is_dataset_ok, is_model_ok, YoloMode
+from src.utils.validator import is_dataset_ok, is_model_ok, YoloMode, is_image_source_ok
 
-logging.basicConfig(level=logging.DEBUG)
+logging.basicConfig(level=logging.INFO)
 
 
 class Direction(IntEnum):
@@ -89,7 +89,8 @@ class AppMainWindow(QMainWindow):
         dlg.show()
 
     def load_results(self, text: str):
-        self.results = [res_file for res_file in Path(text).iterdir() if res_file.suffix in [".jpg", ".png", ".jpeg"]]
+        self.results = [res_file.absolute() for res_file in Path(text).iterdir()
+                        if res_file.suffix in [".jpg", ".png", ".jpeg"]]
         if len(self.results) == 0:
             msg = "No results or images found!"
             logging.error(msg)
@@ -117,9 +118,7 @@ class AppMainWindow(QMainWindow):
             msg = "Training failed!"
             logging.error(msg)
             return
-        self.results = [res_file.absolute() for res_file in results.save_dir.iterdir()
-                        if res_file.suffix in [".jpg", ".png", ".jpeg"]]
-        self.load_image(self.results[0])
+        self.load_results(results.save_dir)
 
     def val(self):
         params = self.get_base_params()
@@ -131,24 +130,22 @@ class AppMainWindow(QMainWindow):
             msg = "Validation failed!"
             logging.error(msg)
             return
-        self.results = [res_file for res_file in results.save_dir.iterdir()
-                        if res_file.suffix in [".jpg", ".png", ".jpeg"]]
-        self.load_image(self.results[0])
+        self.load_results(results.save_dir)
 
     def predict(self):
         params = {'model': self.get_base_params().get('model')}
         if not is_model_ok(params['model'], YoloMode.VAL):
             return
         params['source'] = self.ui.lineEditSource.text()
+        if not is_image_source_ok(Path(params['source'])):
+            return
         params.update(qobjects2dict(self.ui.groupBoxPredictArgs.children()))
         results = yoloiface.predict(params)
         if not results:
             msg = "Prediction failed!"
             logging.error(msg)
             return
-        result_img = [_ for _ in Path(results[0].save_dir).iterdir()][0].resolve()
-        self.ui.lineEditCurrentImg.setText(str(result_img))
-        self.load_image(result_img)
+        self.load_results(results[0].save_dir)
 
     def load_image(self, image_path: Path):
         self.ui.lineEditCurrentImg.setText(str(image_path))
