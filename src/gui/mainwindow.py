@@ -5,10 +5,11 @@ from typing import Union
 
 from PySide6.QtCore import Qt, QObject
 from PySide6.QtGui import QPixmap
-from PySide6.QtWidgets import (QMainWindow, QSpinBox, QComboBox, QFileDialog, QGraphicsScene, QGraphicsPixmapItem,
+from PySide6.QtWidgets import (QMainWindow, QSpinBox, QComboBox, QGraphicsScene, QGraphicsPixmapItem,
                                QDoubleSpinBox)
 from ultralytics.utils import LOGGER as YOLO_LOGGER
 
+from src.gui.dialogs import ModelSelectDialog, DatasetSelectDialog, LoadResultsDialog, SelectImageDialog
 from src.gui.generated.ui_mainwindow import Ui_MainWindow
 from src.utils import yoloiface
 from src.utils.device import detect_available_devices
@@ -22,36 +23,6 @@ logging.basicConfig(level=logging.DEBUG)
 class Direction(IntEnum):
     PREV = 0
     NEXT = 1
-
-
-class ModelSelectDialog(QFileDialog):
-    LABEL_TEXT = "Select YOLOv8 model"
-    NAME_FILTER = "PT files (*.pt);;YAML files (*.yaml)"
-
-    def __init__(self, parent: QMainWindow):
-        super().__init__(parent)
-        self.setFileMode(QFileDialog.FileMode.ExistingFile)
-        self.setLabelText(QFileDialog.DialogLabel.LookIn, self.LABEL_TEXT)
-        self.setNameFilter(self.NAME_FILTER)
-
-
-class DatasetSelectDialog(QFileDialog):
-    LABEL_TEXT = "Select YOLOv8 dataset"
-    NAME_FILTER = "YAML files (*.yaml)"
-
-    def __init__(self, parent: QMainWindow):
-        super().__init__(parent)
-        self.setFileMode(QFileDialog.FileMode.ExistingFile)
-        self.setLabelText(QFileDialog.DialogLabel.LookIn, self.LABEL_TEXT)
-        self.setNameFilter(self.NAME_FILTER)
-
-
-class LoadResultsDialog(QFileDialog):
-    LABEL_TEXT = "Select directory with results"
-
-    def __init__(self, parent: QMainWindow):
-        super().__init__(parent)
-        self.setFileMode(QFileDialog.FileMode.Directory)
 
 
 class AppMainWindow(QMainWindow):
@@ -71,8 +42,10 @@ class AppMainWindow(QMainWindow):
 
         self.ui.pushButtonSelectModel.clicked.connect(self.select_model)
         self.ui.pushButtonSelectDataset.clicked.connect(self.select_dataset)
+        self.ui.pushButtonSelectSource.clicked.connect(self.select_image)
         self.ui.pushButtonTrain.clicked.connect(self.train)
         self.ui.pushButtonVal.clicked.connect(self.val)
+        self.ui.pushButtonPredict.clicked.connect(self.predict)
         self.ui.pushButtonLoadResults.clicked.connect(self.select_results)
 
         self.ui.toolButtonNext.clicked.connect(lambda _: self.change_image(Direction.NEXT))
@@ -93,22 +66,22 @@ class AppMainWindow(QMainWindow):
         for dev in available_devices:
             self.ui.comboBoxDevice.addItem(str(dev))
             self.ui.comboBoxDevice_2.addItem(str(dev))
+            self.ui.comboBoxDevice_3.addItem(str(dev))
 
     def select_model(self):
         dlg = ModelSelectDialog(self)
-        dlg.fileSelected.connect(self.update_model_text)
+        dlg.fileSelected.connect(lambda text: self.ui.lineEditSelectModel.setText(text))
         dlg.show()
-
-    def update_model_text(self, text: str):
-        self.ui.lineEditSelectModel.setText(text)
 
     def select_dataset(self):
         dlg = DatasetSelectDialog(self)
-        dlg.fileSelected.connect(self.update_dataset_text)
+        dlg.fileSelected.connect(lambda text: self.ui.lineEditSelectDataset.setText(text))
         dlg.show()
 
-    def update_dataset_text(self, text: str):
-        self.ui.lineEditSelectDataset.setText(text)
+    def select_image(self):
+        dlg = SelectImageDialog(self)
+        dlg.fileSelected.connect(lambda text: self.ui.lineEditSource.setText(text))
+        dlg.show()
 
     def select_results(self):
         dlg = LoadResultsDialog(self)
@@ -136,7 +109,6 @@ class AppMainWindow(QMainWindow):
         params = self.get_base_params()
         if not is_model_ok(params['model'], YoloMode.TRAIN) or not is_dataset_ok(params['data'], YoloMode.TRAIN):
             return
-
         params.update(qobjects2dict(self.ui.groupBoxTrainArgs.children()))
         self.yolo_log_handler.reset_epochs()
         self.yolo_log_handler.total_epoch = params['epochs']
@@ -145,7 +117,6 @@ class AppMainWindow(QMainWindow):
             msg = "Training failed!"
             logging.error(msg)
             return
-
         self.results = [res_file.absolute() for res_file in results.save_dir.iterdir()
                         if res_file.suffix in [".jpg", ".png", ".jpeg"]]
         self.load_image(self.results[0])
@@ -154,26 +125,37 @@ class AppMainWindow(QMainWindow):
         params = self.get_base_params()
         if not is_model_ok(params['model'], YoloMode.VAL) or not is_dataset_ok(params['data'], YoloMode.VAL):
             return
-
         params.update(qobjects2dict(self.ui.groupBoxValArgs.children()))
         results = yoloiface.val(params)
         if not results:
-            msg = "Validation failed"
+            msg = "Validation failed!"
             logging.error(msg)
             return
-
         self.results = [res_file for res_file in results.save_dir.iterdir()
                         if res_file.suffix in [".jpg", ".png", ".jpeg"]]
         self.load_image(self.results[0])
 
+    def predict(self):
+        params = {'model': self.get_base_params().get('model')}
+        if not is_model_ok(params['model'], YoloMode.VAL):
+            return
+        params['source'] = self.ui.lineEditSource.text()
+        params.update(qobjects2dict(self.ui.groupBoxPredictArgs.children()))
+        results = yoloiface.predict(params)
+        if not results:
+            msg = "Prediction failed!"
+            logging.error(msg)
+            return
+        result_img = [_ for _ in Path(results[0].save_dir).iterdir()][0].resolve()
+        self.ui.lineEditCurrentImg.setText(str(result_img))
+        self.load_image(result_img)
+
     def load_image(self, image_path: Path):
         self.ui.lineEditCurrentImg.setText(str(image_path))
-
         pixmap = QPixmap(str(image_path))
         scene = QGraphicsScene()
         pixmap_item = QGraphicsPixmapItem(pixmap)
         scene.addItem(pixmap_item)
-
         self.ui.graphicsView.setScene(scene)
         self.ui.graphicsView.fitInView(scene.sceneRect(), Qt.KeepAspectRatio)
 

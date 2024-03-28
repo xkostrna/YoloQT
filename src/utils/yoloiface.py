@@ -3,7 +3,6 @@ from ultralytics import YOLO
 
 def train(params: dict):
     model = YOLO(params['model'])
-    print(params)
     return model.train(data=params['data'],
                        imgsz=params['imgsz'],
                        patience=params['patience'],
@@ -18,7 +17,6 @@ def train(params: dict):
 
 def val(params: dict):
     model = YOLO(params['model'])
-    print(params)
     return model.val(data=params['data'],
                      imgsz=params['imgsz'],
                      batch=params['batch'],
@@ -27,3 +25,13 @@ def val(params: dict):
                      max_det=params['max_det'],
                      device=params['device'],
                      split='test')
+
+
+def predict(params: dict):
+    model = YOLO(params['model'])
+    return model.predict(source=params['source'],
+                         conf=params['conf'],
+                         iou=params['iou'],
+                         device=params['device'],
+                         max_det=params['max_det'],
+                         save=True)
