@@ -1,4 +1,3 @@
-import logging
 import queue
 from enum import IntEnum
 from multiprocessing import Process, Queue
