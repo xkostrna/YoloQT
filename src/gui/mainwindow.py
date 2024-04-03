@@ -7,15 +7,15 @@ from PySide6.QtCore import Qt, QObject
 from PySide6.QtGui import QPixmap
 from PySide6.QtWidgets import (QMainWindow, QSpinBox, QComboBox, QGraphicsScene, QGraphicsPixmapItem,
                                QDoubleSpinBox)
-from ultralytics.utils import LOGGER as YOLO_LOGGER
 
 from src.gui.dialogs import ModelSelectDialog, DatasetSelectDialog, LoadResultsDialog, SelectImageDialog
 from src.gui.generated.ui_mainwindow import Ui_MainWindow
 from src.utils import yoloiface
 from src.utils.device import detect_available_devices
-from src.utils.loghandlers import YoloLogHandler, MyLogHandler
+from src.utils.loghandlers import YoloLogHandler, MyLogHandler, LogListenerThread
 from src.utils.syntaxhighlighter import SyntaxHighlighter
 from src.utils.validator import is_dataset_ok, is_model_ok, YoloMode, is_image_source_ok
+from src.utils.yoloiface import TrainRunner, YoloResults
 
 logging.basicConfig(level=logging.INFO)
 
@@ -28,25 +28,27 @@ class Direction(IntEnum):
 class AppMainWindow(QMainWindow):
 
     def __init__(self):
+        # default setup of ui
         super().__init__()
         self.ui = Ui_MainWindow()
         self.ui.setupUi(self)
-        _ = SyntaxHighlighter(self.ui.plainTextEditLog.document())
-        self.yolo_log_handler = YoloLogHandler(self.ui.plainTextEditLog)
-        YOLO_LOGGER.addHandler(self.yolo_log_handler)
-        my_log_handler = MyLogHandler(self.ui.plainTextEditLog)
-        formatter = logging.Formatter('%(asctime)s [%(levelname)s] %(message)s', datefmt="%H:%M:%S")
-        my_log_handler.setFormatter(formatter)
-        logging.getLogger().addHandler(my_log_handler)
-        self.init_device_combobox()
 
+        # Log coloring
+        _ = SyntaxHighlighter(self.ui.plainTextEditLog.document())
+
+        # create log handler for own logs
+        my_log_handler = MyLogHandler(self.ui.plainTextEditLog)
+        logging.getLogger().addHandler(my_log_handler)
+
+        self.init_device_combobox()
         self.ui.pushButtonSelectModel.clicked.connect(self.select_model)
         self.ui.pushButtonSelectDataset.clicked.connect(self.select_dataset)
         self.ui.pushButtonSelectSource.clicked.connect(self.select_image)
         self.ui.pushButtonTrain.clicked.connect(self.train)
+        self.ui.pushButtonStop.clicked.connect(self.stop_training)
         self.ui.pushButtonVal.clicked.connect(self.val)
         self.ui.pushButtonPredict.clicked.connect(self.predict)
-        self.ui.pushButtonLoadResults.clicked.connect(self.select_results)
+        self.ui.pushButtonLoadResults.clicked.connect(self.process_results)
 
         self.ui.toolButtonNext.clicked.connect(lambda _: self.change_image(Direction.NEXT))
         self.ui.toolButtonPrev.clicked.connect(lambda _: self.change_image(Direction.PREV))
@@ -59,6 +61,12 @@ class AppMainWindow(QMainWindow):
 
         self.save_dir: Path = Path()
         self.results: list[Path] = []
+
+        # setup TrainRunner with capturing logs from separate thread into QPlainTextEdit
+        self.train_runner = TrainRunner()
+        self.yolo_log_handler = YoloLogHandler(self.ui.plainTextEditLog)
+        self.log_listener = LogListenerThread(self.train_runner.log_queue, self.yolo_log_handler)
+        self.log_listener.start()
 
     def init_device_combobox(self):
         """Add items to combo box for device based available devices."""
@@ -92,7 +100,7 @@ class AppMainWindow(QMainWindow):
         self.results = [res_file.absolute() for res_file in Path(text).iterdir()
                         if res_file.suffix in [".jpg", ".png", ".jpeg"]]
         if len(self.results) == 0:
-            msg = "No results or images found!"
+            msg = "Results or images not found!"
             logging.error(msg)
             return
         self.load_image(self.results[0])
@@ -113,12 +121,8 @@ class AppMainWindow(QMainWindow):
         params.update(qobjects2dict(self.ui.groupBoxTrainArgs.children()))
         self.yolo_log_handler.reset_epochs()
         self.yolo_log_handler.total_epoch = params['epochs']
-        results = yoloiface.train(params)
-        if not results:
-            msg = "Training failed!"
-            logging.error(msg)
-            return
-        self.load_results(results.save_dir)
+        self.train_runner.setup(params)
+        self.train_runner.train()
 
     def val(self):
         params = self.get_base_params()
@@ -175,6 +179,34 @@ class AppMainWindow(QMainWindow):
 
     def splitter_moved(self):
         self.ui.graphicsView.fitInView(self.ui.graphicsView.sceneRect(), Qt.KeepAspectRatio)
+
+    def stop_training(self):
+        try:
+            self.train_runner.stop_process()
+            msg = "Stopping training process"
+            logging.warning(msg)
+        except AttributeError:
+            msg = "Training process has not started yet"
+            logging.warning(msg)
+
+    def process_results(self):
+        results = self.train_runner.get_result()
+        if results == YoloResults.NO_RESULTS:
+            msg = "Training process has not started yet!"
+            logging.warning(msg)
+            return
+        self.load_results(results)
+
+    def closeEvent(self, event):
+        try:
+            self.train_runner.log_queue.put(None)
+            self.log_listener.join()
+            self.train_runner.stop_process()
+        # ignore, user can close application without starting training
+        except RuntimeError:
+            pass
+        except AttributeError:
+            pass
 
 
 def qobjects2dict(data: list[QObject]) -> dict:

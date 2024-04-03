@@ -197,6 +197,11 @@ class Ui_MainWindow(object):
 
         self.gridLayout.addWidget(self.pushButtonTrain, 3, 2, 1, 1)
 
+        self.pushButtonStop = QPushButton(self.trainTab)
+        self.pushButtonStop.setObjectName(u"pushButtonStop")
+
+        self.gridLayout.addWidget(self.pushButtonStop, 3, 1, 1, 1)
+
         self.tabWidget.addTab(self.trainTab, "")
         self.validationTab = QWidget()
         self.validationTab.setObjectName(u"validationTab")
@@ -508,6 +513,7 @@ class Ui_MainWindow(object):
         self.labelOptimizer.setText(QCoreApplication.translate("MainWindow", u"Optimizer", None))
         self.labelPatience.setText(QCoreApplication.translate("MainWindow", u"Patience", None))
         self.pushButtonTrain.setText(QCoreApplication.translate("MainWindow", u"Train", None))
+        self.pushButtonStop.setText(QCoreApplication.translate("MainWindow", u"Stop", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.trainTab), QCoreApplication.translate("MainWindow", u"Train", None))
         self.pushButtonVal.setText(QCoreApplication.translate("MainWindow", u"Val", None))
         self.groupBoxValArgs.setTitle(QCoreApplication.translate("MainWindow", u"Arguments", None))

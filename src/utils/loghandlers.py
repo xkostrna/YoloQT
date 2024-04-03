@@ -1,5 +1,6 @@
 import logging
 import re
+import threading
 from pathlib import Path
 
 from PySide6.QtWidgets import QPlainTextEdit, QApplication
@@ -10,10 +11,35 @@ def remove_ansi_codes(s: str) -> str:
     return ansi_escape.sub('', s)
 
 
+class LogListenerThread(threading.Thread):
+    def __init__(self, log_queue, handler):
+        super().__init__()
+        self.log_queue = log_queue
+        self.handler = handler
+
+    def run(self):
+        while True:
+            record = self.log_queue.get()
+            if record is None:
+                break
+            self.handler.emit(record)
+
+
+class QueueHandler(logging.Handler):
+    def __init__(self, log_queue):
+        super().__init__()
+        self.log_queue = log_queue
+
+    def emit(self, record):
+        self.log_queue.put(record)
+
+
 class MyLogHandler(logging.Handler):
 
     def __init__(self, plain_text_edit: QPlainTextEdit):
         super().__init__()
+        formatter = logging.Formatter('%(asctime)s [%(levelname)s] %(message)s', datefmt="%H:%M:%S")
+        self.setFormatter(formatter)
         self.widget = plain_text_edit
 
     def emit(self, record):
