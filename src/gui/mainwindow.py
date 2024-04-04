@@ -3,7 +3,7 @@ from enum import IntEnum
 from pathlib import Path
 from typing import Union
 
-from PySide6.QtCore import Qt, QObject
+from PySide6.QtCore import Qt, QObject, Slot, Signal
 from PySide6.QtGui import QPixmap
 from PySide6.QtWidgets import (QMainWindow, QSpinBox, QComboBox, QGraphicsScene, QGraphicsPixmapItem,
                                QDoubleSpinBox)
@@ -25,6 +25,23 @@ class Direction(IntEnum):
     NEXT = 1
 
 
+class TextMonitor(QObject):
+    search_text = "You can find results here: "
+    training_finished = Signal(str)
+
+    def __init__(self, text_edit):
+        super().__init__()
+        self.text_edit = text_edit
+        self.text_edit.textChanged.connect(self.on_text_changed)
+
+    @Slot()
+    def on_text_changed(self):
+        last_line = self.text_edit.toPlainText().split('\n')[-1]
+        if self.search_text in last_line:
+            _, txt = last_line.split(self.search_text)
+            self.training_finished.emit(txt)
+
+
 class AppMainWindow(QMainWindow):
 
     def __init__(self):
@@ -39,6 +56,8 @@ class AppMainWindow(QMainWindow):
         # create log handler for own logs
         my_log_handler = MyLogHandler(self.ui.plainTextEditLog)
         logging.getLogger().addHandler(my_log_handler)
+        self.monitor = TextMonitor(self.ui.plainTextEditLog)
+        self.monitor.training_finished.connect(self.load_results)
 
         self.init_device_combobox()
         self.ui.pushButtonSelectModel.clicked.connect(self.select_model)
@@ -97,6 +116,7 @@ class AppMainWindow(QMainWindow):
         dlg.show()
 
     def load_results(self, text: str):
+        print(text)
         self.results = [res_file.absolute() for res_file in Path(text).iterdir()
                         if res_file.suffix in [".jpg", ".png", ".jpeg"]]
         if len(self.results) == 0:
