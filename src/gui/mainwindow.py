@@ -15,7 +15,7 @@ from src.utils.device import detect_available_devices
 from src.utils.loghandlers import YoloLogHandler, MyLogHandler, LogListenerThread
 from src.utils.syntaxhighlighter import SyntaxHighlighter
 from src.utils.validator import is_dataset_ok, is_model_ok, YoloMode, is_image_source_ok
-from src.utils.yoloiface import TrainRunner, YoloResults
+from src.utils.yoloiface import TrainRunner
 
 logging.basicConfig(level=logging.INFO)
 
@@ -67,7 +67,7 @@ class AppMainWindow(QMainWindow):
         self.ui.pushButtonStop.clicked.connect(self.stop_training)
         self.ui.pushButtonVal.clicked.connect(self.val)
         self.ui.pushButtonPredict.clicked.connect(self.predict)
-        self.ui.pushButtonLoadResults.clicked.connect(self.process_results)
+        self.ui.pushButtonLoadResults.clicked.connect(self.select_results)
 
         self.ui.toolButtonNext.clicked.connect(lambda _: self.change_image(Direction.NEXT))
         self.ui.toolButtonPrev.clicked.connect(lambda _: self.change_image(Direction.PREV))
@@ -116,7 +116,6 @@ class AppMainWindow(QMainWindow):
         dlg.show()
 
     def load_results(self, text: str):
-        print(text)
         self.results = [res_file.absolute() for res_file in Path(text).iterdir()
                         if res_file.suffix in [".jpg", ".png", ".jpeg"]]
         if len(self.results) == 0:
@@ -208,14 +207,6 @@ class AppMainWindow(QMainWindow):
         except AttributeError:
             msg = "Training process has not started yet"
             logging.warning(msg)
-
-    def process_results(self):
-        results = self.train_runner.get_result()
-        if results == YoloResults.NO_RESULTS:
-            msg = "Training process has not started yet!"
-            logging.warning(msg)
-            return
-        self.load_results(results)
 
     def closeEvent(self, event):
         try:

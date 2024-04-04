@@ -1,5 +1,3 @@
-import queue
-from enum import IntEnum
 from multiprocessing import Process, Queue
 from typing import Union
 
@@ -7,10 +5,6 @@ from ultralytics import YOLO
 from ultralytics.utils import LOGGER as YOLO_LOGGER
 
 from src.utils.loghandlers import QueueHandler
-
-
-class YoloResults(IntEnum):
-    NO_RESULTS = 0
 
 
 class TrainRunner:
@@ -34,18 +28,16 @@ class TrainRunner:
     def _train(self, params, log_queue):
         handler = QueueHandler(log_queue)
         YOLO_LOGGER.addHandler(handler)
-        results = self.model.train(data=params['data'],
-                                   imgsz=params['imgsz'],
-                                   patience=params['patience'],
-                                   epochs=params['epochs'],
-                                   batch=params['batch'],
-                                   save_period=params['save_period'],
-                                   device=params['device'],
-                                   workers=params['workers'],
-                                   optimizer=params['optimizer'],
-                                   verbose=True)
-        if results:
-            self.result_queue.put(str(results.save_dir))
+        self.model.train(data=params['data'],
+                         imgsz=params['imgsz'],
+                         patience=params['patience'],
+                         epochs=params['epochs'],
+                         batch=params['batch'],
+                         save_period=params['save_period'],
+                         device=params['device'],
+                         workers=params['workers'],
+                         optimizer=params['optimizer'],
+                         verbose=True)
 
     def train(self):
         if self.process:
@@ -55,12 +47,6 @@ class TrainRunner:
         self.process.terminate()
         self.process.join()
         self.result_queue.put(None)
-
-    def get_result(self):
-        try:
-            return self.result_queue.get(block=False)
-        except queue.Empty:
-            return YoloResults.NO_RESULTS
 
 
 def val(params: dict):
