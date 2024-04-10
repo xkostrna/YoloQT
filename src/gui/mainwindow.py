@@ -74,10 +74,6 @@ class AppMainWindow(QMainWindow):
 
         self.ui.splitter.splitterMoved.connect(self.splitter_moved)
 
-        # FOR TESTING
-        self.ui.lineEditSelectModel.setText(r"F:/School/Ing/DIPLOMA/YoloQT/models/yolov8n.pt")
-        self.ui.lineEditSelectDataset.setText(r"F:/School/Ing/DIPLOMA/YoloQT/datasets/exdark_little/data.yaml")
-
         self.save_dir: Path = Path()
         self.results: list[Path] = []
 
