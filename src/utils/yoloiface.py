@@ -38,10 +38,22 @@ class TrainRunner:
         self.process: Union[Process, None] = None
 
     def setup(self, params: dict) -> None:
+        """Prepare internal attributes for training
+
+        :param params: dictionary of parameters for training e.g {'imgsz': 460, 'batch_size': 16 ....}
+        """
         self.model = YOLO(params['model'])
         self.process = Process(target=self._train, args=(params, self.log_queue), daemon=DAEMON)
 
     def _train(self, params, log_queue):
+        """
+        This method will run after process starts, it will set handler for YOLO_LOGGER to display logs in
+        main thread and then just run training.
+
+        :param params: dictionary of parameters for training e.g {'imgsz': 460, 'batch_size': 16 ....}
+        :param log_queue: Queue object where are logs put
+        :return:
+        """
         handler = QueueHandler(log_queue)
         YOLO_LOGGER.addHandler(handler)
         self.model.train(data=params['data'],
@@ -56,10 +68,12 @@ class TrainRunner:
                          verbose=True)
 
     def train(self):
+        """Starts process if it's initialized"""
         if self.process:
             self.process.start()
 
     def stop_process(self):
+        """Forcefully tries to terminate and join process, then ends result queue."""
         self.process.terminate()
         self.process.join()
         self.result_queue.put(None)
