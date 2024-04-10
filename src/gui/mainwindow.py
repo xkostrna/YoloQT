@@ -17,6 +17,8 @@ from src.utils.syntaxhighlighter import SyntaxHighlighter
 from src.utils.validator import is_dataset_ok, is_model_ok, YoloMode, is_image_source_ok
 from src.utils.yoloiface import TrainRunner
 
+from ultralytics.utils import LOGGER as YOLO_LOGGER
+
 logging.basicConfig(level=logging.INFO)
 
 
@@ -80,6 +82,7 @@ class AppMainWindow(QMainWindow):
         # setup TrainRunner with capturing logs from separate thread into QPlainTextEdit
         self.train_runner = TrainRunner()
         self.yolo_log_handler = YoloLogHandler(self.ui.plainTextEditLog)
+        YOLO_LOGGER.addHandler(self.yolo_log_handler)
         self.log_listener = LogListenerThread(self.train_runner.log_queue, self.yolo_log_handler)
         self.log_listener.start()
 

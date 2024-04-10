@@ -1,10 +1,26 @@
+import logging
 from multiprocessing import Process, Queue
 from typing import Union
+import platform
 
 from ultralytics import YOLO
 from ultralytics.utils import LOGGER as YOLO_LOGGER
 
 from src.utils.loghandlers import QueueHandler
+
+# For windows DAEMON = True is working fine, however only CPU was available on development machine
+DAEMON = True
+
+# We have to fix for Unix cause threading is different there, big thanks to Ing. Pavol Marak PHDr.
+# also this link was used: https://stackoverflow.com/questions/48822463/how-to-use-pytorch-multiprocessing
+if platform.system() == 'Linux':
+    try:
+        from torch.multiprocessing import set_start_method
+        set_start_method('spawn')
+        DAEMON = False
+    except RuntimeError as e:
+        emsg = f"Torch multiprocessing spawn failed!"
+        logging.error(emsg)
 
 
 class TrainRunner:
@@ -23,7 +39,7 @@ class TrainRunner:
 
     def setup(self, params: dict) -> None:
         self.model = YOLO(params['model'])
-        self.process = Process(target=self._train, args=(params, self.log_queue), daemon=True)
+        self.process = Process(target=self._train, args=(params, self.log_queue), daemon=DAEMON)
 
     def _train(self, params, log_queue):
         handler = QueueHandler(log_queue)
